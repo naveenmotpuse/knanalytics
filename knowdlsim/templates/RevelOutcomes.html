@@ -1,0 +1,48 @@
+{% if QLReportView.Objectives.count > 0 %}
+<style type="text/css">    
+    .tblOutcomes {font-family:"Open Sans"}
+    .tblOutcomes tr td {vertical-align:top;}
+    .tblOutcomes .tr_head{background-color:#eceae8}
+    .tblOutcomes .tr_head .objscore{color:green;padding: 10px 0px;font-size: 14px;}
+    .tblOutcomes .tr_head td span{margin:10px; float:left;}
+    .tblOutcomes .tr_head .objscore span{font-size: 14px; float: none;margin: 10px 0px;color: #000;font-weight:normal;}
+    .tblOutcomes .tr_ques{width:100%;}
+    .tblOutcomes .tr_ques div{float:left;width:94%;padding-left:6%;}
+    .tblOutcomes .tr_ques div span{margin:3px;float:left;}
+</style>
+
+<table style="width:100%;" cellpadding="0" cellspacing="0" class="tblOutcomes">
+<input type="hidden" id="hiddenOutcomeChartData" value="{{QLReportView.ChartData}}" />
+    {% for item in QLReportView.Objectives %}    
+        <tr class="tr_head">
+            <td style="width:55%;"><span class="objtitle">{{item.Name}} {{item.Title}})</span></td>
+            <td style="width:45%;" class="objscore">
+            <b>{{item.AverageScore}} % average score
+            <span>({{item.PresentedCount}}/{{QLReportView.TotalAttempted}} Presented)</span></b></td>
+        </tr>
+        <tr class="tr_ques">
+            <td colspan="2" style="width:100%;">
+                {% for ques in item.Questions %}                
+                    <div>
+                    <span>{{ques.QuestionTitle}}</span>
+                    <span>|</span>
+                    <span>{{ques.AverageScore}} % average score ({{ques.PresentedCount}} /  {{QLReportView.TotalAttempted}} students presented)</span>
+                    </div>
+                {% endfor %}
+            </td>            
+        </tr>
+    {% endfor %}
+    <tr><td colspan="2" style="height:20px;"></td></tr>
+</table>
+{% else %}
+	<div>No data found</div>
+{% endif %}
+
+
+
+
+
+
+
+
+

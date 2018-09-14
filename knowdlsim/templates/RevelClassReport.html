@@ -1,0 +1,91 @@
+{% if QLReportView.Results.count > 0 %}
+<input type="hidden" id="hiddenClassReportAvgGrade" value="{{QLReportView.AverageScore}}" />
+<input type="hidden" id="hiddenClassReportMedian" value="{{QLReportView.MedianScore}}" />
+<table class="tblOverviewQuestionDetails">
+    <tbody>
+        {% for item in QLReportView.Results %}
+        	<tr class="questionOverviewRow" data-questionid="{{item.Id}}" data-forgraph="{{item.ForGraph}}">
+                    <td colspan="3">
+                        <div class="questionTitleDiv">
+                            <table style="width:100%">
+                                <tr>
+                                    <td width="60%"><div class="arrow-right"></div>
+                                    <div class="qsnTitle">{{item.QuestionTitle}}<span>{{item.OccurenceNo |safe}}</span></div></td>
+                                    <td width="40%" class="tdoverviewPresented"><span>
+                                    <b>{{item.AverageScorePercent}}% average score </b><span style="color:#000;">
+                                    ({{item.QuestionAttempted}}/{{item.TotalAttempted}} presented)</span></span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            <tr class="questionOverviewDetailsRow" data-questionid="{{item.Id}}">
+                    <td colspan="3">
+                        <div class="divoverviewoptionsData">
+                            <div class="divOverviewQuestionText">
+                                {{item.Text}}
+                            </div>
+                            <div class="divoverviewoptions">
+                                <table class="tbloveroptions" style="width:100%;">
+                                    {% if item.OptionAlignment == "H" %}
+                                        <tr>
+                                         {% for option in item.Options %}
+                                            <td class="tdOverviewOptionImage" align="center">
+                                                <img src="/{{option.Image}}" style="width:60px;height:60px;" />
+                                                <div>
+                                                    <img src="{{option.PointsImage}}" style="position:absolute;width:20px;" />
+                                                    <div class="optionText"> {{option.Text}}</div>
+                                                </div>
+                                            </td>
+                                        {% endfor %}
+                                        </tr>
+                                    {% else %}
+                                        {% for option in item.Options %}
+                                            <tr>
+                                                <td class="tdOverviewOptionImage">
+                                                    <img src="/{{option.Image}}" style="width:60px;height:60px;" />
+                                                </td>
+                                                <td class="tdOverviewoptiontexxt">
+                                                    <div>
+                                                        <img src="{{option.PointsImage}}" style="position:absolute;width:20px;" />
+                                                        <div class="optionText">{{option.Text}}</div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% endif %}
+                                </table>
+                            </div>
+
+                        </div>
+                        <div class="divStudentDetails" style="float:left;padding: 0px 5% 10px; width:90%;">
+                            {% for student in item.Students %}
+                                <div><span class="usernamedata" id="{{student.Name}}">{{student.Name}} </span> :
+                                <img src="/content/staticfiles/revelanalytics/images/{{student.Points}}point.png" style="width:20px; margin-bottom:-6px;" /></div>
+                            {% endfor %}
+                        </div>
+                        <hr style="width:100%;" />
+                    </td>
+                </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+   <p>No data found</p> {% endif %}
+<script>
+ function setCRUserNames()
+ {
+	var allSpans = $(".usernamedata");
+	for (var i = 0; i < allSpans.length; i++) {
+		var usrDta = $.grep(parent.allUsersData.course_users, function(e){ return e.user_name == allSpans[i].id; });
+		if (usrDta.length == 1) {
+		  // access the foo property using result[0].foo
+		  $(allSpans[i]).text(usrDta[0].metadata_map.display_name);
+		 // console.log(usrDta[0].metadata_map.display_name + "<User>")
+		}
+	}
+ }
+ setTimeout(function () { setCRUserNames() },1000);
+</script>
+
+

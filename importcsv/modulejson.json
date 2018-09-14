@@ -1,0 +1,177 @@
+{
+    "Status": "NotStarted",
+    "ModuleScore": "0",
+    "VisitedNumberOfPages": "0",
+    "LastVisitedPage": "",
+    "RecordId": "",
+    "RecordTitle": "Apple Has First Earning Decline in More Than a Decade",
+    "VideoURL": "https://mediaplayer.pearsoncmg.com/assets/ABC_News-2016-ATM_4_27_16_AppleHasFirstEarningsDeclineinMoreThanaDecade",
+    "LandingPageURL": "record1_landing.htm",
+    "LandingPageImage": "record1_landing.jpg",
+    "QuestionSequence": "Numbers",
+    "OptionSequence": "LowerAlphabets",
+    "RandomizeQuestions": true,
+    "RandomizeOptions": true,
+    "Questions": [
+        {
+            "QuestionId": "1",
+            "QuestionText": "The recent decrease in iPhone sales most likely indicates that the company's products are in the ______ stage of the product life cycle.",
+            "Options": [
+                        {
+                            "OptionId": "1",
+                            "OptionText": "decline",
+                            "IsCorrect": true
+                        },
+                        {
+                            "OptionId": "2",
+                            "OptionText": "growth",
+                            "IsCorrect": false
+                        },
+                        {
+                            "OptionId": "3",
+                            "OptionText": "introduction",
+                            "IsCorrect": false
+                        },
+                        {
+                            "OptionId": "4",
+                            "OptionText": "maturity",
+                            "IsCorrect": false
+                        }
+
+            ],
+            "CorrectFeedback": "Good work! You're correct.",
+            "CorrectFeedbackDesc": "No additional explaination.",
+            "InCorrectFeedback": "Sorry. That's not correct.",
+            "InCorrectFeedbackDesc": "No additional explaination.",
+            "UserSelectedOptionId": ""
+        },
+        {
+            "QuestionId": "2",
+            "QuestionText": "______ is the most likely reason that iPhone sales decreased during the previous quarter, and why Apple will be launching its newest iPhone soon.",
+            "Options": [
+                        {
+                            "OptionId": "1",
+                            "OptionText": "Technological advances",
+                            "IsCorrect": true
+                        },
+                        {
+                            "OptionId": "2",
+                            "OptionText": "Uninterested customers",
+                            "IsCorrect": false
+                        },
+                        {
+                            "OptionId": "3",
+                            "OptionText": "A shift in consumer taste",
+                            "IsCorrect": false
+                        },
+                        {
+                            "OptionId": "4",
+                            "OptionText": "Increased competition",
+                            "IsCorrect": false
+                        }
+
+            ],
+            "CorrectFeedback": "Good work! You're correct.",
+            "CorrectFeedbackDesc": "No additional explaination.",
+            "InCorrectFeedback": "Sorry. That's not correct.",
+            "InCorrectFeedbackDesc": "No additional explaination.",
+            "UserSelectedOptionId": ""
+        },
+        {
+            "QuestionId": "3",
+            "QuestionText": "During the time the iPhone brought in high profits and sales peaked, it was most likely in the _______ stage of the product life cycle.",
+            "Options": [
+                        {
+                            "OptionId": "1",
+                            "OptionText": "maturity",
+                            "IsCorrect": true
+                        },
+                        {
+                            "OptionId": "2",
+                            "OptionText": "introduction",
+                            "IsCorrect": false
+                        },
+                        {
+                            "OptionId": "3",
+                            "OptionText": "growth",
+                            "IsCorrect": false
+                        },
+                        {
+                            "OptionId": "4",
+                            "OptionText": "decline",
+                            "IsCorrect": false
+                        }
+
+            ],
+            "CorrectFeedback": "Good work! You're correct.",
+            "CorrectFeedbackDesc": "No additional explaination.",
+            "InCorrectFeedback": "Sorry. That's not correct.",
+            "InCorrectFeedbackDesc": "No additional explaination.",
+            "UserSelectedOptionId": ""
+        },
+        {
+            "QuestionId": "4",
+            "QuestionText": "The first customers to purchase the original iPhone as soon as it hit the market are most likely classified as which type of adopters?",
+            "Options": [
+                        {
+                            "OptionId": "1",
+                            "OptionText": "Innovators",
+                            "IsCorrect": true
+                        },
+                        {
+                            "OptionId": "2",
+                            "OptionText": "Lagging adopters",
+                            "IsCorrect": false
+                        },
+                        {
+                            "OptionId": "3",
+                            "OptionText": "Early adopters",
+                            "IsCorrect": false
+                        },
+                        {
+                            "OptionId": "4",
+                            "OptionText": "Mainstream adopters",
+                            "IsCorrect": false
+                        }
+
+            ],
+            "CorrectFeedback": "Good work! You're correct.",
+            "CorrectFeedbackDesc": "No additional explaination.",
+            "InCorrectFeedback": "Sorry. That's not correct.",
+            "InCorrectFeedbackDesc": "No additional explaination.",
+            "UserSelectedOptionId": ""
+        },
+        {
+            "QuestionId": "5",
+            "QuestionText": "As sales decline for the current iPhone, which is the most likely course of action for Apple regarding pricing of the iPhone?",
+            "Options": [
+                        {
+                            "OptionId": "1",
+                            "OptionText": "Apple will cut prices.",
+                            "IsCorrect": true
+                        },
+                        {
+                            "OptionId": "2",
+                            "OptionText": "Apple will use cost-plus pricing.",
+                            "IsCorrect": false
+                        },
+                        {
+                            "OptionId": "3",
+                            "OptionText": "Apple with match or beat competitor prices.",
+                            "IsCorrect": false
+                        },
+                        {
+                            "OptionId": "4",
+                            "OptionText": "Apple will use penetration pricing.",
+                            "IsCorrect": false
+                        }
+            ],
+            "CorrectFeedback": "Good work! You're correct.",
+            "CorrectFeedbackDesc": "No additional explaination.",
+            "InCorrectFeedback": "Sorry. That's not correct.",
+            "InCorrectFeedbackDesc": "No additional explaination.",
+            "UserSelectedOptionId": ""
+        }
+    ]
+}
+

@@ -1,0 +1,30 @@
+
+		
+	<!-- <div ng-show="!hasSession" style="margin-left:10px;display:inline-block;vertical-align:top">
+		You must launch an XL session to use the emulator.  Please launch a test session by submitting
+		the launch form<span ng-if="sessions.length > 0"> or select one of the sessions listed on the right</span>. 
+	</div>-->									
+	
+	<div style="vertical-align:top" id="sessionTable">
+		<!-- <button ng-click="showForm()" class="linkButton">Start New Session</button>-->
+		<h2>Available Sessions:{{sessions.data.length}}</h2>
+		<div style="margin-top:5px;]">Select a launch mode:
+			<input type="radio" name="mode_sel" value="do">&nbsp;Do
+			<input type="radio" name="mode_sel" value="preview">&nbsp;Preview
+			<input type="radio" name="mode_sel" value="practice">&nbsp;Practice
+			<input type="radio" name="mode_sel" value="do">&nbsp;Review
+			<input type="radio" name="mode_sel" value="setup">&nbsp;Setup
+		</div>		
+		<div style="color:red">{{message}}</div>
+		<table id="sTable" style="border:1px solid;vertical-align:top">
+			<thead><th>User Name</th><th>Assignment</th><th>Sim Name</th><th>&nbsp;</th></thead>
+			<tr ng-repeat="s in sessions.data">
+				<td>{{s.custom_firstname}} {{s.custom_lastname}}</td><td>{{s.custom_assignmenttitle}}</td><td>{{s.target_app}}</td>
+				<td nowrap><span>{{s.oauth_sig}}</span>
+
+					<button class="linkButton" ng-click="mockLaunch($index)">launch</button>&nbsp;
+					<!-- <button class="linkButton" ng-click="removeSession($index)">remove</button>-->
+				</td>
+			</tr>
+		</table>
+	</div>

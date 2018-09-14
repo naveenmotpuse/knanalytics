@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+	<title>Revel Analytics</title>
+   	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300" />
+	<link rel="stylesheet" type="text/css" href="/content/staticfiles/revelanalytics/css/QLSimAnalytics.css"></link>
+	<link rel="stylesheet" type="text/css" href="/content/staticfiles/revelanalytics/plugin/nice-select/nice-select.css"></link>
+
+	<script type="text/javascript" src="/content/staticfiles/revelanalytics/js/jquery-1.8.1.js"></script>
+	<script type="text/javascript" src="/content/staticfiles/revelanalytics/js/jquery-ui-1.9.0.min.js"></script>
+	<script type="text/javascript" src="/content/staticfiles/revelanalytics/js/runOnLoad.js"></script>
+    <!-- <script  type="text/javascript" src="/static/plugin/highcharts.js"></script> -->
+    <script type="text/javascript" src="/content/staticfiles/revelanalytics/plugin/highstock.js"></script>
+   	<script type="text/javascript" src="/content/staticfiles/revelanalytics/plugin/nice-select/jquery.nice-select.js"></script>
+	<script type="text/javascript" src="/content/staticfiles/revelanalytics/js/QLSimAnalytics.js"></script>
+</head>
+
+<body style="margin: auto;width: 740px;">
+{% load Revel_Extras %}
+
+<div id="analyticsHeader">
+<h3>Revel Analytics</h3>
+
+<div style="float:left;">
+
+<div style="display:inline-block;margin:10px;">
+{% if ql_list %}
+    <select id="selectedSim" class="NiceSelectBoxStyle CustomSelBox" style="max-width:350px !important;">
+    {% for key, value in ql_list.items %}
+        <option value={{key}} >{{value}}</option>
+    {% endfor %}
+    </select>
+{% else %}
+    <select id="selectedSim" class="NiceSelectBoxStyle CustomSelBox" style="max-width:350px !important;">
+    	<option value="">Select Simulation</option>
+    </select>
+{% endif %}
+</div>
+
+<div style="display:inline-block;margin:10px;">
+{% if asgn_list %}
+    <select id="selectedASGN" class="NiceSelectBoxStyle CustomSelBox" style="max-width:350px !important;">
+    {% for key, value in asgn_list.items %}
+        <option value={{key}} >{{value}}</option>
+    {% endfor %}
+    </select>
+{% else %}
+    <select id="selectedASGN" class="NiceSelectBoxStyle CustomSelBox" style="max-width:350px !important;">
+    	<option value="">Select Assignment</option>
+    </select>
+{% endif %}
+</div>
+</div>
+<div style="display:inline-block;width:80px;">
+     <button id="btnGo" style="margin-left: 20px;margin-top: 20px;padding: 5px;">Go</button>
+</div>
+</div>
+<div id="analyticsReport" style="clear:both;">
+	{% show_RevelAnalyticsDetails %}
+</div>
+
+</body>
+</html>
+
+
+
+
+

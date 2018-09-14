@@ -1,0 +1,170 @@
+﻿<!DOCTYPE html>
+{% load custom_tags %}
+{% if isSearch != "isSearch"  %}
+    {% if reassigned_media_id == 0 %}
+        <!-- saved from url=(0043)http://localhost:59541/bml/hcdr/index2.htm# -->
+        <html lang="en">
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <title>Business Media Library</title>
+
+    <meta http-equiv="Cache-Control" content="no-store">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/content/assigned_mediaview_files/font-awesome.min.css">
+    <link href="/content/assigned_mediaview_files/font.css" rel="stylesheet">
+    <link href="/content/assigned_mediaview_files/layout.css" rel="stylesheet">
+    <link href="/content/assigned_mediaview_files/module.css" rel="stylesheet">
+    <link href="/content/assigned_mediaview_files/device.css" rel="stylesheet">
+
+    <script src="/content/assigned_mediaview_files/jquery-2.1.4.min.js"></script>
+    <script src="/content/assigned_mediaview_files/mediaview.js"></script>
+        </head>
+        <body>
+    {% csrf_token %}
+            <div id="wrapper" class="mxwidth">
+                <header role="banner">
+                    <center>
+                        <div id="header-content" class="mxwidth">
+                            <div id="header-title">
+                                <img src="/content/assigned_mediaview_files/logo.png">
+                                <h1>
+                                    Business Media Library
+                                    <input type="button" id="returnBtn" class="returnAssignment" value="Return">
+                                </h1>
+                            </div>
+                        </div>
+                    </center>
+                </header>
+                <main role="main">
+                    <div class="top-slider innerWrapper headmargin" style="margin-top:85px"></div>
+                      <div id="shellFrame" style="display:none;position:relative;min-height:625px;">
+                        <iframe src="_blank" id="framePreview" style="min-height:625px;" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>
+                     </div>
+					    <div class="main-content innerWrapper">
+                        <div class="media-library" assignment_id="{{assignment_id}}" custom_target="{{custom_target}}" style="display:flex;flex-direction:column;">
+    {% endif %}
+                    <div class="media-group-selected">
+                        <div class="media-row-selected">
+                            <div class="media-col-1" style="border-right: 1px solid #EDEDED;">
+                                <div style="margin-bottom:10px;">Original Record</div>
+                                <div class="media-video">
+                                    <!-- <img src="{% static 'media_library/assigned_mediaview_files/videoThumbnail{{media.record_id}}.jpg" alt="">-->
+                                    <img src="/content/assigned_mediaview_files/thumb-img-1.jpg" alt="">
+                                </div>
+                                <div class="media-text">
+                                    <p>{{original_record.record_title}}</p>
+                                    {% if isAdmin %}
+                                        <p style="cursor:pointer;" class="modEditBtn" recordid="{{original_record.record_id}}"><i class="fa fa-pencil-square-o"></i></p>
+                                    {% endif %}
+                                    {% if reassigned_media_id != 0 and reassigned_media_id != original_record.record_id %}
+                                        <p style="cursor:pointer;" class="modSaveBtn" recordid="{{original_record.record_id}}"><i class="fa fa-hand-pointer-o"></i></p>
+                                    {% endif %}
+                                    <p style="cursor:pointer;" class="modPreviewBtn assignedMedia" recordid="{{original_record.record_id}}"><i class="fa fa-eye"></i></p>
+                                </div>
+                            </div>
+                            <div class="media-col-2">
+                                <div style="margin-bottom: 10px; color: #007AA3; font-weight:bold;">Selected Record</div>
+                                {% if reassigned_media_id == 0 or reassigned_media_id == original_record.record_id %}
+                                <div>The original record has not been changed.</div>
+                                {% else %}
+                                <div class="media-video">
+                                    <!-- <img src="/content/assigned_mediaview_files/videoThumbnail{{media.record_id}}.jpg" alt="">-->
+                                    <img src="/content/assigned_mediaview_files/thumb-img-1.jpg" alt="">
+                                </div>
+                                <div class="media-text">
+                                    <p>{{assigned_record.record_title}}</p>
+                                    <p style="cursor:pointer;" class="modPreviewBtn assignedMedia" recordid="{{assigned_record.record_id}}"><i class="fa fa-eye"></i></p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="media-group-recommended">
+                        <div style="margin-left: 15px;margin-bottom: 15px;">Recommended Records</div>
+                        {% if related_media_list|length > 0 %}
+                            {% for mediaset in related_media_list %}
+                                <div class="media-row-recommended">
+                                    {% for media in mediaset %}
+                                    <div class="media-col-{{mediaitem|index:forloop.counter0}}">
+                                        <div class="media-video">
+                                            <!-- <img src="/content/assigned_mediaview_files/videoThumbnail{{media.record_id}}.jpg" alt="">-->
+                                            <img src="/content/assigned_mediaview_files/thumb-img-1.jpg" alt="">
+                                        </div>
+                                        <div class="media-text">
+                                            <p>{{media.record_title}}</p>
+                                            <p style="cursor:pointer;" class="modSaveBtn" recordid="{{media.record_id}}"><i class="fa fa-hand-pointer-o"></i></p>
+                                            <p style="cursor:pointer;" class="modPreviewBtn" recordid="{{media.record_id}}"><i class="fa fa-eye"></i></p>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div style="margin-left: 15px;">No recommendations for this media</div>
+                        {% endif %}
+                    </div>
+                    <div class="search-filter">
+                        <div class="search-bar">
+                            <input type="text" id="asgn_media_search" class="" placeholder="Search">
+                        </div>
+                        <div class="filter-bar">
+                            <select id="filter-dropdown" style="-webkit-appearance: none;">
+                                <option></option>
+                                {% for recommendation in recommendation_list %}
+                                <option value="{{recommendation}}">{{recommendation}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="media-group-all">
+                        <div style="margin: 0px 20px 15px 15px;text-align:right;">{{all_media_pages.totalMedia}} records</div>
+                        {% if all_media_pages.allMedia|length > 0 %}
+                        {% for page in all_media_pages.allMedia %}
+                        <div class="page" pagenumber="{{page|index:forloop.counter0}}">
+                            {% for mediaset in page %}
+                            <div class=" media-row-all">
+                                {% for media in mediaset %}
+                                <div class="media-col-{{mediaitem|index:forloop.counter0}}">
+                                    <div class="media-video">
+                                        <!-- <img src="/content/assigned_mediaview_files/videoThumbnail{{media.record_id}}.jpg" alt="">-->
+                                        <img src="/content/assigned_mediaview_files/thumb-img-1.jpg" alt="">
+                                    </div>
+                                    <div class="media-text">
+                                        <p>{{media.record_title}}</p>
+                                        <p style="cursor:pointer;" class="modSaveBtn" recordid="{{media.record_id}}"><i class="fa fa-hand-pointer-o"></i></p>
+                                        <p style="cursor:pointer;" class="modPreviewBtn" recordid="{{media.record_id}}"><i class="fa fa-eye"></i></p>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div>Media Not Found</div>
+                    {% endif %}
+    {% if reassigned_media_id == 0 %}
+{% if isSearch != "isSearch"  %}
+                </div>
+            </div>
+        </main>
+        <footer style="display: flex;justify-content: center;align-items: center;height: 30px;width: 97%;margin: 15px;">
+            <div style="height: 100%;display: flex;width: 100%;">
+                <div style="padding: 10px;height: 100%;width: 56%;text-align: right;"><a id="link_more" href="javascript:void(0);">More</a></div>
+                <div class="current_page" totalmedia="{{all_media_pages.totalMedia}}" style="padding: 10px;height: 100%;text-align: right;width: 48%;margin-right: 25px;">Displaying 6 of {{all_media_pages.totalMedia}}</div>
+            </div>
+        </footer>
+    </div>
+    <!-- Visual Studio Browser Link -->
+    <script type="application/json" id="__browserLink_initializationData">
+        {"appName":"Chrome"}
+    </script>
+    <script type="text/javascript" src="/content/assigned_mediaview_files/browserLink" async="async"></script>
+    <!-- End Browser Link -->
+</body>
+</html>
+    {% endif %}
+{% endif %}

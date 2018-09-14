@@ -1,0 +1,25 @@
+{% load custom_tags %}
+{% load static %}
+{% if related_media_list|length > 0 %}
+    {% for mediaset in related_media_list %}
+        <div class="media-row">
+            {% for media in mediaset %}
+            <div class="media-col-{{mediaitem|index:forloop.counter0}}">
+                <div class="media-video">
+                   <!-- <img src="{% static 'media_library/assigned_mediaview_files/videoThumbnail{{media.record_id}}.jpg' %}" alt="">-->
+                    <img src="/content/assigned_mediaview_files/thumb-img-1.jpg" alt="">
+                </div>
+                <div class="media-text">
+                    <p>{{media.record_title}}</p>
+                    <p style="cursor:pointer;" class="modPreviewBtn" recordId="{{media.record_id}}"><i class="fa fa-eye"></i></p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% else %}
+ <div class="media-row">No results found</div>
+{% endif %}
+<script>
+    loadAssignedViewEvents()
+</script>

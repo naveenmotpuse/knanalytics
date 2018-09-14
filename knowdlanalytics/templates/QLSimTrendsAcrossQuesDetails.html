@@ -1,0 +1,54 @@
+{% load QLSim_Extras %}
+{% if QLReportView.Results.count > 0 %}
+
+<table class="tblQuestionDetails">
+{% for ql in QLReportView.Results %}
+	<tr class="questionRow" data-questionid="{{ql.Id}}" data-forgraph="{{ql.ForGraph}}">	
+		<td width="75%"><span>{{ql.Text}}</span></td>
+		<td width="15%"><div>Answered {{ql.NumberOfTimesAnswered}} times</div></td>
+		<td width="10%" class="tdGraph">
+			<div class="graphDiv" id="graphDiv"></div>
+        </td>   
+	</tr>
+	<tr class="questionDetailsRow"  data-questionid="{{ql.Id}}" data-forgraph="{{ql.ForGraph}}">
+		<td colspan="3">
+			<div class="divoptionsData">
+			<table class='innerTbl'>
+				{% for opt in ql.Options %}			
+				{% optionSelStatus opt.Status as tag1 %}
+				
+					<tr><td class="tdpercent"><div class="{{tag1.1}}"><span>{{opt.Percent}}</span></div></td>
+					<td class="tdoption">
+					<div class="divoptions">
+						<span class="optionStatus {{tag1.1}}">{{tag1.0}}</span><br />
+						<span class="optionText"> {{opt.Text}}</span>
+						<span class="optionAnswered">Answered {{opt.NumberOfTimesAnswered}} / {{ql.NumberOfTimesAnswered}} times</span><br/>
+					</div>
+					</td>
+					</tr>
+				{% endfor %}
+			</table>	
+			</div>
+			<div class="enlargedGraphDiv">
+			{# graph will appear here #}
+			</div>
+		</td>
+	</tr>		
+	<tr style="height: 5px;">
+  		<td colspan="3"></td>
+	</tr>
+{% endfor %}
+</table>
+{% else %}
+	<div>No data found</div>
+{% endif %}
+<script type="text/javascript">
+	$(document).ready(function () {
+	    UpdateGraph();
+	    //$(".divoptionsData").each(function () {
+	    //    ht = $(this).closest(".questionDetailsRow").height();
+	    //    $(this).css({ "height": ht + "px" });
+	    //})
+	    $(".questionDetailsRow").hide();
+	});
+</script>

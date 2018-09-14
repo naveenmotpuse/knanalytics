@@ -1,0 +1,73 @@
+body {
+
+	font-family:arial;
+	font-size:14px;
+}
+.header {
+
+	font-size:22px;
+	margin-left:20px;
+	font-weight:normal;
+	border:1px solid lightgrey;
+	padding:5px;
+	padding-left:15px;
+
+}
+
+.linkButton {
+
+	border:0px;
+	text-decoration:underline;
+	background:transparent;
+	cursor:pointer;
+	color:blue;
+}
+
+table {
+
+	border-spacing:2px;
+	table-layout:fixed;
+}
+
+th {
+
+	background:lightgrey;
+	padding:4px 4px;
+
+}
+
+td {
+
+	word-wrap:break-word;
+	font-family:arial;
+	font-size:14px;
+	padding:4px 4px;
+}
+
+#sessionTable tr:nth-child(even) {
+    background-color: #eee;
+}
+/*tr:nth-child(odd) {
+    background-color: #ddd;
+}*/
+
+.formRow {
+
+	position:relative;
+	width:500px;
+	height:25px;
+	margin-left:10px;
+}
+
+.rightAligned {
+
+	position:absolute;
+	left:150px;
+
+}
+
+h2 {
+
+	font-size:16px;
+	font-weight:normal;
+}

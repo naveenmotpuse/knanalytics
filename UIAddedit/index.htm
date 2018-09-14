@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Business Media Library</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-store" />
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="styles/font.css" rel="stylesheet" />
+    <link href="styles/layout.css" rel="stylesheet" />
+    <link href="styles/module.css" rel="stylesheet" />
+    <link href="styles/device.css" rel="stylesheet" />
+    <!-- <link href="styles/jquery.tagsinput.css" rel="stylesheet"/> -->
+    <link href="http://stage1.knowdl.com/Scripts/plugins/input-tags/jquery.tagsinput.css" rel="stylesheet"/>
+    <script src="scripts/external/jquery-2.1.4.min.js"></script>
+    <!-- <script src="scripts/caching.js"></script>
+    <script src="scripts/module.js"></script>
+    <script src="scripts/navigator.js"></script>
+    <script src="scripts/data.js"></script>-->
+    <!-- <script src="scripts/external/jquery.tagsinput.js"></script> -->
+    <!-- <script src=" http://stage1.knowdl.com/Scripts/plugins/input-tags/jquery.tagsinput.js"></script> -->
+   <script src="scripts/external/jquery.tagsinput.js"></script>
+    <script src="scripts/events.js"></script> 
+
+</head>
+
+<body>
+    <div id="wrapper" class="mxwidth">
+        <header role="banner">
+            <center>
+                <div id="header-content" class="mxwidth">
+                    <div id="header-title">
+                        <img src="assets/images/logo.png" alt="" />
+                        <h1>Business Media Library
+                            <input type="button" id="" class="" value="Return">
+                        </h1>
+                    </div>
+                </div>
+            </center>
+        </header>
+        <main role="main">
+            <div class="top-slider innerWrapper headmargin" style="margin-top:85px"></div>
+            <div class="main-content innerWrapper">
+                <div class="AddRecordPage">
+                    <div class="addRecordLabel">
+                        <h2>
+                            Add Record
+                        </h2>
+                    </div>
+                    <div class="recordFormGroup">
+                        <form>
+                            <div class="formGroup">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <label>
+                                                <strong>Record Title:</strong>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input type="text" id="RecordTitle" name="title" placeholder="Record Title" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>
+                                                <strong>Video Url:</strong>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input type="text" id="VideoUrl" name="url" placeholder="Video URL" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>
+                                                <strong>Metadata:</strong>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <div id="qtip-54" class="qtip qtip-default dialogue qtip-pos-lt qtip-modal qtip-focus" tracking="false" role="alert" aria-live="polite"
+                                                aria-atomic="false" aria-describedby="qtip-54-content" aria-hidden="false" data-qtip-id="54"
+                                                style="z-index: 14801; top: 0px; left: 18.703px;width:314px; opacity: 1; display: block;">
+                                                <div class="qtip-tip" style="background-color: transparent !important; border: 0px !important; width: 8px; height: 8px; line-height: 8px; top: 5px; left: -8px;">
+                                                    <canvas width="8" height="8" style="background-color: transparent !important; border: 0px !important; width: 8px; height: 8px;">
+                                                    </canvas>
+                                                </div>
+                                                <div class="qtip-content" id="qtip-54-content" aria-atomic="true">
+                                                    <table>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                 <input type="text" id="inputTagBox" onkeypress="handlekeydown(event);" style="width: 100%">    
+                                                                 <!-- <a style="color:#000;margin-left: 40px;" href="javascript:void(0);" id="btnAddTag" aid="43150">Add</a>     -->
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <!-- <input type="text" id="tag1" class="temp01" value="" style="display: none;"> -->
+                                                    <!-- <div id="tag1_tagsinput" class="tagsinput" style="width: 220px; min-height: auto; height: auto;">
+                                                        <span class="tag">
+                                                            <span>test&nbsp;&nbsp;</span>
+                                                            <a href="#" title="Removing tag">
+                                                            </a>
+                                                        </span>
+                                                        <span class="tag">
+                                                            <span>te&nbsp;&nbsp;</span>
+                                                            <a href="#" title="Removing tag">
+                                                            </a>
+                                                        </span>
+                                                        <div id="tag1_addTag">
+                                                        </div>
+                                                        <div class="tags_clear">
+                                                        </div>
+                                                    </div> -->
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>
+                                                <strong>Video Info:</strong>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <textarea placeholder="Video Information" id="VideoInfo" rows="4" cols="50">
+                                                  
+                                             </textarea>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </form>
+                    </div>
+                    <div class="QuestionHeading">
+                        <h2>Questions</h2>
+                        <h4 class="collExpandIcon">+</h4>
+                        <input type="button" id="UpdateQuestion" class="updatequestion" value="Update Question"/>
+                    </div>
+                    <div class="AddQuestionRecord">
+                    
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <center>
+                <nav role="navigation">
+                    <div id="footer-navigation">
+                        <div class="previous">
+                            <a id="linkprevious" href="#">
+                                <img class="prevImg" src="assets/images/back-button.png" aria-hidden="true">
+                                <span>Previous</span>
+                            </a>
+                        </div>
+                        <div class="next">
+                            <a id="linknext" href="#">
+                                <span>Next</span>
+                                <img class="nextImg" src="assets/images/next-button.png" aria-hidden="true">
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </center>
+        </footer>
+    </div>
+</body>
+
+</html>

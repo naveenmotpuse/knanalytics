@@ -1,0 +1,93 @@
+{% if QLReportView.Results.count > 0 %}
+<input type="hidden" id="hiddenOverviewAvgGrade" value="{{QLReportView.AverageScore}}" />
+<input type="hidden" id="hiddenOverviewCompleted" value="{{QLReportView.AverageCompleted}}" />
+    <table class="tblOverviewQuestionDetails">
+    <tbody>
+            {% for item in QLReportView.Results %} 
+                <tr class="questionOverviewRow" data-questionid="{{item.Id}}" data-forgraph="{{item.ForGraph}}">
+                    <td colspan="3">
+                        <div class="questionTitleDiv">
+                            <table style="width:100%">
+                                <tr>
+                                    <td width="50%"><div class="arrow-right"></div><div class="qsnTitle">{{item.QuestionTitle}}
+                                    <span>{{item.OccurenceNo |safe}}</span></div></td>
+                                    <td width="50%" class="tdoverviewPresented">
+                                    	<span><b>{{item.Presented}} were presented this question</b>
+                                    	<span style="color:#000;"> ({{item.QuestionAttempted}}/{{item.TotalAttempted}} presented)</span>
+                                    	</span>
+                                   	</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+				<tr class="questionOverviewDetailsRow" data-questionid="{{item.Id}}">
+				    <td colspan="3">
+				        <div class="divoverviewoptionsData">
+				            <div class="divOverviewQuestionText">
+				                {{item.Text}}
+				            </div>
+				            <div class="divoverviewoptions">
+				                <table class="tbloveroptions" style="width:100%;">
+				                   {% if item.OptionAlignment == "H" %}
+				                       <tr>
+				                           {% for option in item.Options %}				                           
+				                               <td class="tdOverviewOptionImage" align="center">
+				                                   <img src="/{{option.Image}}" style="width:60px;height:60px;" />
+				                                   <div>
+				                                       <img src="{{option.PointsImage}}" style="position:absolute;width:20px;" />
+				                                       <div class="optionText"> {{option.Text}}</div>
+				                                   </div>
+				                               </td>
+				                           {% endfor %}
+				                       </tr>
+				                   {% else %}		
+				                       {% for option in item.Options %}				                       
+				                           <tr>            
+				                               <td class="tdOverviewOptionImage" width="10%">
+				                                   <img src="/{{option.Image}}" height="60" width="60" />
+				                               </td>
+				                               <td class="tdOverviewoptiontexxt">
+				                                   <div>
+				                                       <img src="{{option.PointsImage}}" style="position:absolute;width:20px;" />
+				                                       <div class="optionText"> {{option.Text}}</div>
+				                                   </div>
+				                               </td>
+				                           </tr>
+										{% endfor %}
+				                   {% endif %}                    
+					                   <tr>
+					                       <td></td>
+					                       <td colspan="3">
+					                           <div class="divOverviewOptionDetails" style="padding: 10px 0px;">
+					                               {% for option in item.Options %}					                                   
+					                                   <div>{{option.NumberOfTimesAnswered}}/{{item.NumberOfTimesAnswered}} students selected 
+					                                   <b> {% if option.Text|length > 35 %}
+					                                   			{{option.Text|slice:"0:35"}} 
+					                                   			<span style="margin-left: -3px;" >...</span> 
+					                                    	{% else %}
+					                                    		 {{option.Text}}
+					                                    	{% endif %}				
+					                                    </b>
+					                                   <span>(</span>
+					                                   <div style="position:absolute;display:inline-block;margin-left: -4px;"> 
+					                                   		<img src="{{option.PointsImage}}" style="width:20px;" />
+					                                   </div> 
+					                                   <span style="margin-left:20px;">{{option.Points}} out of {{item.Points}})
+					                                   </span>
+					                                   </div>
+					                               {% endfor %}
+					                           </div>
+					                       </td>
+					                   </tr>				                                   
+                               </table>
+                           </div>			
+	                       </div>
+	                   </td>
+	               </tr>
+            {% endfor %}
+    </tbody>
+</table>
+{% else %}
+   <p>No data found</p>
+{% endif %}

@@ -1,0 +1,56 @@
+
+
+<html>
+	<head>
+
+	<script>
+		function getCsrf() {
+
+			var cookies = document.cookie.split(';');
+			for (var i = 0; i < cookies.length; i++) {
+				 var args = cookies[i].split('=');
+				 if (args[0].trim() == 'csrftoken')
+				 	document.getElementById('csrf').value = args[1];
+			}
+		}
+	</script>
+		<style>
+
+			.header {
+
+				width:100%;
+				text-align:center;
+			}
+			body {
+
+				font-family:arial;
+				font-size:14px;
+			}
+			.formRow {
+
+				position:relative;
+				width:400px;
+				height:30px;
+			}
+			input {
+
+				position:absolute;
+				left:150px;
+			}
+
+		</style>
+	</head>
+	<body onload="getCsrf()">
+		<div style="width:100%;text-align:center"><img style="margin:auto" src="image/red-hill-studios-logo.png"></div>
+		<h1 class="header">ATM SIM API Emulator Login</h1>
+		<div style="width:400px;margin:100 auto">
+			<form action="/xlsim/simLaunch/testing/login" method="POST">
+				<div class="formRow">Please login to use the SIMS emulator</div>
+				<div class="formRow">Username:<input name="un"></div>
+				<div class="formRow">Password:<input type="password" name="pw"></div>
+				<div class="formRow"><input type="submit" value="Login"></div>
+				<input type="hidden" name="csrfmiddlewaretoken" id="csrf" value="">
+			</form>
+		</div>
+	</body>
+</html>

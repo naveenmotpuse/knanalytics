@@ -1,0 +1,108 @@
+﻿
+@media screen and (max-width : 1024px) {
+ 
+}
+@media  screen and (max-width:940px){
+  #wrapper{
+      border:0px;
+  }
+}
+@media  screen and (max-width: 912px) {  
+   
+}
+@media  screen and (max-width: 893px) {  
+    
+}
+@media  screen and (max-width: 880px) {  
+
+}
+@media  screen and (max-width: 840px) {  
+    
+}
+@media  screen and (max-width : 768px) {
+    #climate-deal {
+        width: 98%;
+    }
+    .intro-content-question{
+        width:100%;
+    }
+    .intro-content-question .intro-p,.intro-content-question .question-band{
+        margin:0 3%;
+    } 
+    .filter-bar {
+        width: 24%;
+    }
+    .media-row .media-col-1, .media-row .media-col-2, .media-row .media-col-3 {
+        width: 45%;
+        padding: 0px 15px;
+    }
+    .media-row {
+        display: table;
+    }
+    #header-title img {
+        width: 100px;
+    }   
+ 
+}
+@media  screen and (max-width : 650px) {
+    .filter-bar {
+        width: 23%;
+    }
+    .media-row .media-col-1, .media-row .media-col-2, .media-row .media-col-3 {
+        width: 44%;
+        padding: 0px 15px;
+    }
+    .media-row {
+        display: table;
+    }
+}
+@media  screen and (max-width : 580px) {
+    #header-title h1{
+        font-size:22px;
+    }
+    .media-row .media-col-1, .media-row .media-col-2, .media-row .media-col-3 {
+        width: 100%;
+        padding: 0px 0px;
+    }
+    .search-bar {
+        width: 95%;
+        margin-bottom:10px;
+        margin-left: 0px;
+    }
+    .filter-bar{
+        width: 97%;
+        margin-left: 0px;
+    }
+}
+@media  screen and (max-width : 460px) {
+    #header-title h1{
+        font-size:22px;
+    }
+}
+@media screen and (max-width: 445px){
+ 
+}
+/* Smartphones (portrait and landscape) ----------- */
+@media  screen and (max-width : 440px) {
+    #header-title span {
+        float: initial;
+    }
+    #header-title h1{
+        font-size:19px;
+    }
+    #header-title img {
+        width: 100px;
+    }   
+    .media-row .media-col-1, .media-row .media-col-2, .media-row .media-col-3 {
+        width: 100%;
+        padding: 0px 0px;
+    }
+    .media-row {
+        display: table;
+    }
+}
+@media  screen and (max-width : 420px) {
+   
+}
+
+

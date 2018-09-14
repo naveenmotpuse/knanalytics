@@ -1,0 +1,124 @@
+
+
+{% load QLSim_Extras %}
+{% if QLReportView.Results.count > 0 %}
+ <input type="hidden" id="hiddenClassReportAvgGrade" value="{{QLReportView.AverageScore}}" />
+ <div style="margin-top:10px;margin-bottom:10px;">
+   <input type="text" style="width:250px;padding:5px;" id="ipStudentSearch" placeholder="Search Student" /><br />
+</div>
+<table class="tblStudentDetails">
+<tbody>
+  {% for item in QLReportView.Results %}
+      <tr class="studentRow" data-studentid="{{item.Id}}">
+          <td colspan="3">
+              <div style="float:left;">{{item.Name}}</div>
+              {% if item.CompletionStatus == "Completed" %}
+              	<div style="font-size:12px;color:green;float:left;padding-left:10px;padding-top:3px;">({{item.CompletionStatus}})</div>
+              {% else %}
+              	<div style="font-size:12px;color:maroon;float:left;padding-left:10px;padding-top:3px;">({{item.CompletionStatus}})</div>
+              {% endif %}
+              <div style="font-size:12px;color:green;float:left;padding-left:10px;padding-top:3px;">
+                  {% for att in item.Attempts %}
+                  	<a style="padding-right:10px;" href="javascript:void(0);" class="student_review_link"
+                  	attno="{{att.AttemptNo}}" sid="{{att.SessionId}}">Attempt {{att.AttemptNo}} ({{att.Score}})%</a>
+                  {% endfor %}
+              </div>
+              <input type="hidden" id="hdnScore{{item.Id}}" value="{{item.Score}}" />
+          </td>
+     	</tr>
+      {% for question in item.Questions %}
+      	{% FindQuestionInArray QLReportView.QuestionsDetails question.Id as questionDetail %}
+        {% if questionDetail  %}
+		<tr class="studentDetailRow" data-studentid="{{item.Id}}" data-questionid="{{questionDetail.Id}}">
+			<td colspan="3">
+		    <div class="questionTitleDiv">
+		    <table style="width:100%">
+		   		<tr>
+			       <td width="60%"><div class="arrow-right"></div>
+			       <div class="qsnTitle">{{questionDetail.QuestionTitle}}
+			       <span>{{questionDetail.OccurenceNo | safe }}</span></div>
+			       </td>
+			       <td width="40%"><div style="display:inline-block"><div>
+			       <img src="{{question.PointsImage}}" style="width:20px;" /></div></div>
+			       <div class="marks" style="display:inline-block;position:absolute;margin-left:5px;">
+			                    Points {{question.PointsObtained}} out of {{question.TotalPoints}}</div>
+		           </td>
+		    	</tr>
+		     </table>
+		     </div>
+		    </td>
+		</tr>
+        <tr class="studentDetailQuestionRow" data-studentid="{{item.Id}}" data-questionid="{{questionDetail.Id}}">
+         	<td colspan="3">
+             <div class="divoverviewoptionsData">
+             	<div class="divOverviewQuestionText">
+                    {{questionDetail.Text}}
+                </div>
+                <div class="divoverviewoptions">
+                	<table class="tbloveroptions" style="width:100%;">
+                       {% if questionDetail.OptionAlignment == "H" %}
+                         <tr>
+                       		{% for option in questionDetail.Options %}
+                              {% AddPointImageOrNot question option as ret %}
+                                  <td class="tdOverviewOptionImage" align="center">
+                                      <img src="/{{ret.imgsrc}}" height="60" width="60" />
+                                      <div>
+                                          {% if addPointImage == True %}
+                                          	<img src="{{ret.pointsImage}}" style="position:absolute;width:20px;" />
+                                          {% endif %}
+                                          <div class="optionText" style="margin-left:5px;">{{option.Text}}</div>
+                                      </div>
+                                  </td>
+                              {% endfor %}
+                          </tr>
+                        {% else %}
+                             {% for option in questionDetail.Options %}
+                                 <tr>
+                                     {% AddPointImageOrNot question option as ret %}
+                                     <td class="tdOverviewOptionImage">
+                                         <img src="/{{ret.imgsrc}}" height="60" width="60" />
+                                     </td>
+                                         <td class="tdOverviewoptiontexxt">
+                                             <div>
+                                                 {% if addPointImage == True %}
+                                                     <img src="{{ret.pointsImage}}" style="position:absolute;width:20px;" />
+                                                 {% endif %}
+                                                 <div class="optionText"> {{option.Text}}</div>
+                                             </div>
+                                         </td>
+                                 </tr>
+                              {% endfor %}
+                        {% endif %}
+                          <tr><td colspan="4">
+                              <div style="display:inline-block;position:absolute">
+                              	<img src="{{ret.pointsImage}}" style="width:20px;" /></div>
+                              <div style="display:inline-block;margin-left:25px;" class="FeedbackDiv">
+                              	{{question.PointsObtained}} out of {{question.TotalPoints}} earned : {{ret.feedBackText|safe}}</div>
+                              	</td>
+						  </tr>
+					</table>
+                </div>
+
+              </div>
+             </td>
+        </tr>
+        {% endif %} {# questionDetail if ends #}
+      {% endfor %}  {# question for loop ends #}
+   {% endfor %} {# QLReportView.Results #}
+</tbody>
+</table>
+{% else %}
+	<div>No data found</div>
+{% endif %}
+
+<script>
+	function fSetOptImgs(){ var arropimg = $(".tdOverviewOptionImage img")
+	 for(var i=0; i < arropimg.length; i ++ ){
+	 	if( arropimg[i].src.indexOf("/qualsims/") == -1){
+	 		arropimg[i].src = arropimg[i].src.replace(window.origin,top.location.href.substring(0,top.location.href.lastIndexOf("/")))
+	 	}
+ } }
+ setTimeout("fSetOptImgs()",1000)
+
+ setInterval("fSetOptImgs()",5000)
+</script>

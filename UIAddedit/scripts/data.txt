@@ -1,0 +1,192 @@
+[
+    {
+        "QuestionId" : "1",
+        "QuestionText" : "The vinodbonde's lead-in to Brian Ross's report states that it 'may well leave you heartbroken and outraged.' This wording employs which aspect(s) of language?",
+        "Options" : [
+                        {
+                        "OptionId" : "1",
+                        "OptionText" : "Strong, familiar words",
+                        "IsCorrect" : true
+                        },
+                        {
+                        "OptionId" : "2",
+                        "OptionText" : "Passive voice",
+                        "IsCorrect" : false
+                        },
+                        {
+                        "OptionId" : "3",
+                        "OptionText" : "A logical appeal",
+                        "IsCorrect" : false
+                        },
+                        {
+                        "OptionId" : "4",
+                        "OptionText" : "Bias-free language",
+                        "IsCorrect" : false
+                        },
+                        {
+                        "OptionId" : "5",
+                        "OptionText" : "Use of euphemisms",
+                        "IsCorrect" : false
+                        }
+
+                    ],
+        "CorrectFeedback" : "Good work! You're correct.",
+        "CorrectFeedbackDesc" : "No additional explaination.",
+        "InCorrectFeedback" : "Sorry. That's not correct.",
+        "InCorrectFeedbackDesc" : "No additional explaination.",
+        "UserSelectedOptionId" : ""
+
+    },
+    {
+        "QuestionId" : "2",
+        "QuestionText" : "Tommy Hilfiger told ABC News that his Bangladesh factories meet 'the gold standard,' despite a deadly fire. Then, his staff ordered the news crew off the property. When a company faces negative news, how should it respond?",
+        "Options" : [
+                        {
+                        "OptionId" : "1",
+                        "OptionText" : "All of the answer choices are correct.",
+                        "IsCorrect" : true
+                        },
+                        {
+                        "OptionId" : "2",
+                        "OptionText" : "Be prepared for trouble ahead of time.",
+                        "IsCorrect" : false
+                        },
+                        {
+                        "OptionId" : "3",
+                        "OptionText" : "Do not refuse to answer questions.",
+                        "IsCorrect" : false
+                        },
+                        {
+                        "OptionId" : "4",
+                        "OptionText" : "Have a crisis management plan.",
+                        "IsCorrect" : false
+                        },
+                        {
+                        "OptionId" : "5",
+                        "OptionText" : "Disseminate correct and consistent information.",
+                        "IsCorrect" : false
+                        }
+
+                    ],
+        "CorrectFeedback" : "Good work! You're correct.",
+        "CorrectFeedbackDesc" : "No additional explaination.",
+        "InCorrectFeedback" : "Sorry. That's not correct.",
+        "InCorrectFeedbackDesc" : "No additional explaination.",
+        "UserSelectedOptionId" : ""
+
+    },
+    {
+        "QuestionId" : "3",
+        "QuestionText" : "Tommy Hilfiger said his company had pulled out of Bangladesh, saying, 'We will never manufacture clothes in those factories ever again.' When the statement proved false, what would communications specialists recommend as the next step?",
+        "Options" : [
+                        {
+                        "OptionId" : "1",
+                        "OptionText" : "Assume full responsibility for the miscommunication.",
+                        "IsCorrect" : true
+                        },
+                        {
+                        "OptionId" : "2",
+                        "OptionText" : "Speculate about the media's intentions.",
+                        "IsCorrect" : false
+                        },
+                        {
+                        "OptionId" : "3",
+                        "OptionText" : "Blame the miscommunication on subordinates.",
+                        "IsCorrect" : false
+                        },
+                        {
+                        "OptionId" : "4",
+                        "OptionText" : "Publicize company safeguards to prevent problems.",
+                        "IsCorrect" : false
+                        },
+                        {
+                        "OptionId" : "5",
+                        "OptionText" : "Avoid interviews in hopes the publicity will die down.",
+                        "IsCorrect" : false
+                        }
+
+                    ],
+        "CorrectFeedback" : "Good work! You're correct.",
+        "CorrectFeedbackDesc" : "No additional explaination.",
+        "InCorrectFeedback" : "Sorry. That's not correct.",
+        "InCorrectFeedbackDesc" : "No additional explaination.",
+        "UserSelectedOptionId" : ""
+
+    },
+    {
+        "QuestionId" : "4",
+        "QuestionText" : "Some experts advise that a company should never apologize, even when it knows it has made a mistake. What is the main concern?",
+        "Options" : [
+                        {
+                        "OptionId" : "1",
+                        "OptionText" : "The apology might be taken as a confession of guilt that could be used against the company in a lawsuit.",
+                        "IsCorrect" : true
+                        },
+                        {
+                        "OptionId" : "2",
+                        "OptionText" : "Apologies play no strategic role in running a business.",
+                        "IsCorrect" : false
+                        },
+                        {
+                        "OptionId" : "3",
+                        "OptionText" : "The apology might make the executive appear weak, which could be a disadvantage in future negotiations.",
+                        "IsCorrect" : false
+                        },
+                        {
+                        "OptionId" : "4",
+                        "OptionText" : "The apology could reinforce the negative situation, damaging the company's reputation.",
+                        "IsCorrect" : false
+                        },
+                        {
+                        "OptionId" : "5",
+                        "OptionText" : "Apologies could hurt the company's relationships with its stakeholders.",
+                        "IsCorrect" : false
+                        }
+
+                    ],
+        "CorrectFeedback" : "Good work! You're correct.",
+        "CorrectFeedbackDesc" : "No additional explaination.",
+        "InCorrectFeedback" : "Sorry. That's not correct.",
+        "InCorrectFeedbackDesc" : "No additional explaination.",
+        "UserSelectedOptionId" : ""
+
+    },
+    {
+        "QuestionId" : "5",
+        "QuestionText" : "Hilfiger and its parent company announced a $2 million plan for an independent fire inspector in Bangladesh to enforce new, strict regulations. Which principle of crisis communication does this action best illustrate?",
+        "Options" : [
+                        {
+                        "OptionId" : "1",
+                        "OptionText" : "Demonstrate the company's concern.",
+                        "IsCorrect" : true
+                        },
+                        {
+                        "OptionId" : "2",
+                        "OptionText" : "Tell the story completely and honestly.",
+                        "IsCorrect" : false
+                        },
+                        {
+                        "OptionId" : "3",
+                        "OptionText" : "Provide a buffer to the bad news.",
+                        "IsCorrect" : false
+                        },
+                        {
+                        "OptionId" : "4",
+                        "OptionText" : "Put the blame on others.",
+                        "IsCorrect" : false
+                        },
+                        {
+                        "OptionId" : "5",
+                        "OptionText" : "Establish common ground with the public.",
+                        "IsCorrect" : false
+                        }
+
+                    ],
+        "CorrectFeedback" : "Good work! You're correct.",
+        "CorrectFeedbackDesc" : "No additional explaination.",
+        "InCorrectFeedback" : "Sorry. That's not correct.",
+        "InCorrectFeedbackDesc" : "No additional explaination.",
+        "UserSelectedOptionId" : ""
+
+    }
+    ]

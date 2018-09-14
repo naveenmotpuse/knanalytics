@@ -1,0 +1,78 @@
+<div style="border:1px">
+
+
+	<div>
+
+		<div style="width:330px;display:inline-block;">
+			<h2>Test API Call:
+				<button ng-click="showAdvanced()" ng-if="!advancedAPIShown" class="linkButton">show advanced</button>
+				<button ng-click="hideAdvanced()" ng-if="advancedAPIShown" class="linkButton">hide advanced</button>
+			</h2>
+			<div class="formRow">
+				<input ng-disabled="!hasSession" ng-click="selectCall(2)" type="radio" name="apicall" value="getState">Get SIM State
+			</div>
+			<div class="formRow">
+				<input ng-disabled="!hasSession" ng-click="selectCall(5)" type="radio" name="apicall" value="saveCustomData">Report Outcome
+			</div>
+			<div ng-if="callIndex==5" class="formRow" style="margin-left:30px;">
+				Enter Score (value between 0 and 1.0):<input class="rightAligned" style="left:250px" name="score" size="4">
+			</div>				
+			<div ng-if="callIndex==5" class="formRow" style="margin-left:30px;">
+				Enter duration time (in seconds):     <input class="rightAligned" style="left:250px" name="time" size="4">
+			</div>				
+			<div ng-if="advancedAPIShown">
+				<div class="formRow">
+					<input ng-disabled="!hasSession" ng-click="selectCall(1)" type="radio" name="apicall" value="getLaunchParam">Get Launch Parameters
+				</div>
+				<div class="formRow">
+					<input ng-disabled="!hasSession" ng-click="selectCall(3)" type="radio" name="apicall" value="getCustomData">Get Custom Data
+				</div>
+				<div class="formRow">
+					<input ng-disabled="!hasSession" ng-click="selectCall(4)" type="radio" name="apicall" value="saveCustomData">Save Custom Data
+				</div>
+				<div ng-if="callIndex==4" style="margin-left:30px">
+					<span style="vertical-align:top">Enter Data to Save:&nbsp;</span><textarea id="customData"></textarea>
+				</div>				
+			</div>
+			<div><button ng-click="emulate()">Emulate API Call</button></div>
+		</div>
+		<div ng-show="hasSession" style="display:inline-block;width:300px;vertical-align:top;">
+			<h2>You are currently signed in:</h2>
+			<table style="border-spacing:0px;cell-spacing:0px;cell-padding:0px">
+				<tr><td>User Name:</td><td>{{user_name}}</td></tr>
+				<tr><td>Assignment:</td><td>{{assignment}}</td></tr>
+				<tr><td>Sim Name:</td><td>{{simName}}</td></tr>		
+				<tr><td>Url:</td><td><a href="{{url}}" >{{url}}</a></td></tr>	
+			</table>			
+		</div>		
+
+	</div>
+	<div ng-show="feedback">
+		<h2>Feedback:</h2>
+		<div style="width:500px;height:300px;overflow:scoll;border:1px solid">
+			{{feedbackNote}}
+			<table style="width450:px">
+				<tr>
+					<td style="width:60px">URL:</td>					
+					<td style="width:340px">{{apiCall}}</td>
+				</tr>
+				<tr>
+					<td style="width:60px">Method:</td>					
+					<td style="width:340px">{{apiCallMethod}}</td>
+				</tr>
+				<tr>
+					<td style="width:100px">Encoding:</td>					
+					<td style="width:340px">{{apiCallEncoding}}</td>
+				</tr>								
+				<tr>
+					<td style="width:60px">Status:</td>					
+					<td style="width:340px">{{feedbackStatus}}</td>
+				</tr>
+				<tr>
+					<td style="width:40px;vertical-align:top">Data:</td>
+					<td style="width:200px">{{feedbackData}}</td>
+				</tr>		
+			</table>
+		</div>
+	</div>
+</div>

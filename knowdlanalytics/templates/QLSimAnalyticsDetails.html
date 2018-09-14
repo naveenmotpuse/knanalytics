@@ -1,0 +1,288 @@
+
+
+<head>
+	<script type="text/javascript" src="/econservice-static/knowdlanalytics/js/QLSimAnalyticsDetails.js"></script>
+	<script>
+        function ExportDataCSV() {
+            lWhatData = $(".selected")[0].innerHTML;
+            if (lWhatData == "Outcomes") return;
+            var data = [];
+            debugger;
+
+            switch (lWhatData) {
+                case "Overview":
+                    data = ExportOverviewOrClass(lWhatData);
+                    break;
+
+                case "Class Report":
+                    data = ExportOverviewOrClass("Class");
+                    break;
+
+                case "Student Report":
+                    data = ExportStudent("Student")
+                    break;
+
+                case "Outcomes":
+                    data = [["name1", "city1", "some other info"]];
+                    break;
+            }
+            csvContent = "data:text/csv;charset=utf-8,";
+            data.forEach(function (infoArray, index) {
+
+                dataString = infoArray.join(",");
+                csvContent += index < data.length ? dataString + "\n" : dataString;
+
+            });
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", lWhatData + "_data.csv");
+            document.body.appendChild(link); // Required for FF
+
+            link.click();
+        }
+
+        function ExportStudent(rel) {
+            var data = [["Student Name", "Attempt Status", "Attempts", "Student Best Score", "Class Score", "Questions"]];
+            var tab = $(".tabContainer[rel='" + rel + "']");
+            var tbl = tab.find(".tblStudentDetails");
+            var stdRow = tbl.find(".studentRow");
+            var stdQRow = tbl.find(".studentDetailRow");
+            var stdQDtlRow = tbl.find(".studentDetailQuestionRow");
+            var classScore = tab.find("#hiddenClassReportAvgGrade").val();
+
+            if (stdRow.length == 0 || stdQRow.length == 0) {
+                return data;
+            }
+
+            for (var i = 0; i < stdRow.length; i++) {
+                var std = $(stdRow[i]);
+                var stdId = std.data("studentid");
+                var arr = [];
+
+                //add student details
+                arr.push('"' + (std.find("div:first").text()) + '"');//std name
+                arr.push('"' + (std.find("div:nth(1)").text()) + '"');//attempt status
+
+                //attempts list
+                var attmpts = std.find(".student_review_link");
+                var attmptLst = [];
+                for (var j = 0; j < attmpts.length; j++) {
+                    attmptLst.push($(attmpts[j]).text());
+                }
+                attmpts = JSON.stringify(attmptLst);
+                attmpts = attmpts.replace(/\"/g, "'");
+                arr.push('"' + attmpts + '"');
+
+                //student bests core
+                arr.push('"' + (std.find("input[type='hidden']").val()) + '%"');
+
+                //class score
+                arr.push('"' + classScore + '%"');
+
+                //add questions details
+                var quesLst = [];
+                var qRow = stdQRow.filter("[data-studentid='" + stdId + "']");
+
+                for (var k = 0; k < qRow.length; k++) {
+
+                    var rw = $(qRow[k]);
+                    var quesId = rw.data("questionid");
+                    var qTitle = rw.find(".qsnTitle").text().replace(/\"/g, "");
+                    var marks = rw.find(".marks").text();
+
+                    var qDtlRow = stdQDtlRow.filter("[data-studentid='" + stdId + "'][data-questionid='" + quesId + "']");
+
+                    var dtlRw = $(qDtlRow);
+                    var desc = dtlRw.find(".divOverviewQuestionText").text();
+                    desc = desc.replace(/\r?\n|\r\t/g, "").replace(/\"/g, "").replace(/\u200B/g, '').replace(/\u00a0/g, "");
+
+                    var feedback = dtlRw.find(".FeedbackDiv").text();
+                    feedback = feedback.substring(feedback.indexOf("earned : ") + 10);
+                    feedback = feedback.replace(/\r?\n|\r\t/g, "").replace(/\"/g, "").replace(/\u200B/g, '').replace(/\u00a0/g, "");
+
+                    var ques = { 'Question Title': qTitle, 'Marks': marks, 'Description': desc, 'Feedback': feedback };
+                    ques.Options = [];
+
+                    var dvOptions = dtlRw.find(".tdOverviewoptiontexxt");
+                    for (var m = 0; m < dvOptions.length; m++) {
+                        var dvOpt = $(dvOptions[m]);
+                        var optText = dvOpt.find(".optionText").text().replace(/\u200B/g, '');
+                        optText = optText.replace(/\r?\n|\r\t/g, "").replace(/\"/g, "");
+
+                        var ptimg = dvOpt.find("img");
+                        var selected = false;
+                        if (ptimg != undefined && ptimg.length != 0) {
+                            selected = true;
+                        }
+                        var optn = { 'Option Text': optText, 'Selected': selected };
+                        ques.Options.push(optn);
+                    }//ques options end
+
+                    quesLst.push(ques);
+                }//student ques row end
+
+                //push all questions
+                var temp = JSON.stringify(quesLst);
+                temp = temp.replace(/\"/g, "'");
+                arr.push('"' + temp + '"');
+
+                //push student entire row
+                data.push(arr);
+            }//student list end
+
+            return data;
+        }
+
+        function ExportOverviewOrClass(rel) {
+            var data = [];
+
+            if (rel == "Overview") {
+                data = [["Question Title", "% presented", "out of presented", "Description",
+                        "Option1", "OptionSelected1", "Option2", "OptionSelected2", "Option3", "OptionSelected3", "Option4", "OptionSelected4", "Option5", "OptionSelected5",
+                        "Option6", "OptionSelected6", "Option7", "OptionSelected7", "Option8", "OptionSelected8", "Option9", "OptionSelected9", "Option10", "OptionSelected10"]];
+            }
+            else if (rel == "Class") {
+                data = [["Question Title", "Average Score(%)", "out of presented", "Description",
+                        "Option1", "Option2", "Option3", "Option4", "Option5", "Option6", "Option7", "Option8", "Option9", "Option10",
+                        "StudentsScore"]];
+            }
+            var tbl = $(".tabContainer[rel='" + rel + "'] .tblOverviewQuestionDetails");
+            var qRow = tbl.find(".questionOverviewRow");
+            var qDtlRow = tbl.find(".questionOverviewDetailsRow");
+
+            if (qRow.length == 0) {
+                return data;
+            }
+
+            for (var i = 0; i < qRow.length; i++) {
+                var rw = $(qRow[i]);
+                var arr = [];
+                var qTitle = rw.find(".qsnTitle").text().replace(/\"/g, "");
+                arr.push('"' + qTitle + '"');//ques title
+                var tdPresntd = rw.find(".tdoverviewPresented");
+                arr.push('"' + (tdPresntd.find("span b").text()) + '"');//% presented
+                arr.push('"' + (tdPresntd.find("span span").text()) + '"');//out of presented
+
+                var dtlRw = $(qDtlRow[i]);
+                var desc = dtlRw.find(".divOverviewQuestionText").text();
+                desc = desc.replace(/\r?\n|\r\t/g, "").replace(/\"/g, "").replace(/\u200B/g, '').replace(/\u00a0/g, "");
+                arr.push('"' + desc + '"');//Description
+
+                var dvOptions = dtlRw.find(".tdOverviewoptiontexxt");
+                var dvOptSels = undefined;
+
+                if (rel == "Overview") {
+                    dvOptSels = dtlRw.find(".divOverviewOptionDetails > div");
+                }
+
+                for (var j = 0; j < dvOptions.length; j++) {
+                    var dvOpt = $(dvOptions[j]);
+                    var optText = dvOpt.find(".optionText").text().replace(/\u200B/g, '');
+                    optText = optText.replace(/\r?\n|\r\t/g, "").replace(/\"/g, "");
+
+                    var src = dvOpt.find("img").attr("src");
+
+                    var opt = { 'Option Text': optText, 'Points': GetPointFromStr(src) };
+
+                    optText = JSON.stringify(opt)
+                    optText = optText.replace(/\"/g, "'");
+
+                    //add opt text plus points Option1,2,3....
+                    arr.push('"' + optText + '"');
+
+                    //only for overview tab
+                    if (rel == "Overview") {
+                        //add OptionSelected1,2,3....
+                        var optSel = $(dvOptSels[j]).text();
+                        optSel = optSel.substring(0, (optSel.indexOf("selected") + 8));
+                        arr.push('"' + optSel + '"');
+                    }
+                }//options array end
+                //add remaining options
+                for (var k = dvOptions.length; k < 10; k++) {
+                    arr.push('" "');//option
+                    if (rel == "Overview") {
+                        arr.push('" "');//optionselected
+                    }
+                }
+                //for class tab
+                if (rel == "Class") {
+                    var dvStdScore = dtlRw.find(".divStudentDetails > div");
+                    var stdScoreLst = [];
+
+                    for (var m = 0; m < dvStdScore.length; m++) {
+                        var dvStd = $(dvStdScore[m]);
+                        var ptSrc = dvStd.find("img").attr("src");
+
+                        var stdName = dvStd.text().replace(" : ", "");
+                        var std = { 'Student Name': stdName, 'Points': GetPointFromStr(ptSrc) };
+                        stdScoreLst.push(std);
+                    }
+
+                    var temp = JSON.stringify(stdScoreLst);
+                    temp = temp.replace(/\"/g, "'");
+
+                    arr.push('"' + temp + '"');
+                }
+                data.push(arr);//push whole question
+            }
+            return data;
+        }
+
+        function GetPointFromStr(src) {
+            var prefix = "";
+
+            if (src.indexOf("0point") != -1) {
+                prefix = "0";
+            }
+            else if (src.indexOf("1point") != -1) {
+                prefix = "1";
+            }
+            else if (src.indexOf("2point") != -1) {
+                prefix = "2";
+            }
+            else if (src.indexOf("3point") != -1) {
+                prefix = "3";
+            }
+            else if (src.indexOf("4point") != -1) {
+                prefix = "4";
+            }
+            else {
+                prefix = "5";
+            }
+            return prefix;
+        }
+	</script>
+</head>
+<body>
+<div class="ql" style="margin: auto; width: 740px; position: relative;">
+     <div class="title">
+         <div class="main">
+             <span>Results</span>
+             <button id="exportToExcel" onclick="ExportDataCSV()">Export To CSV</button>
+         </div>
+         <div class="sub"><span class="asgnTitle"></span> <b><span class="tabname">Overview</span></b></div>
+     </div>
+     <div class="charts">
+     </div>
+     <div class="tabs">
+         <a href="javascript:void(0);" rel="Overview" class="reporttab">Overview</a><div class="vline"></div>
+         <a href="javascript:void(0);" rel="Class" class="reporttab">Class Report</a><div class="vline"></div>
+         <a href="javascript:void(0);" rel="Student" class="reporttab">Student Report</a><div class="vline"></div>
+         <a href="javascript:void(0);" rel="Outcomes" class="reporttab">Outcomes</a><div class="vline"></div>
+         <a href="javascript:void(0);" class="expand expandcollapse"></a>
+     </div>
+     <div class="hline"></div>
+     <div id="analyticsResult" class="analyticsResult">
+         <div class="tabContainer hide" rel="Overview"></div>
+         <div class="tabContainer hide" rel="Class"></div>
+         <div class="tabContainer hide" rel="Student"></div>
+         <div class="tabContainer hide" rel="Outcomes"></div>
+     </div>
+ </div>
+</body>
+
+
+
+

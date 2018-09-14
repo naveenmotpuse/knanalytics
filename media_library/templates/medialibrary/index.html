@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Business Media Library</title>
+</head>
+<body>
+    <a href="">Add New Media</a>
+    {% for media in media_library_list %}
+        <ul>
+            <li>
+                <a>{{media.record_title}} </a><a href="/medialibrary/{{media.record_id}}/">Edit Media</a>
+            </li>
+        </ul>
+    {% endfor %}
+</body>
+</html>

@@ -1,0 +1,304 @@
+
+<html>
+
+	<head>
+		<script src="scripts/angular.min.js"></script>		
+		<script src="scripts/angular-cookies.min.js"></script>
+		<script src="scripts/jquery.min.js"></script>		
+
+		<script>
+			var theApp = angular.module('SimsEmulator', ['ngCookies']);
+			theApp.controller('EmulatorCntl', ['$scope', '$cookies', '$http', '$timeout', function($scope, $cookies, $http, $timeout) {
+
+				$scope.feedback = false;
+				$scope.feedbackStatus = 'no status'
+				$scope.hasSession = false;
+				$scope.sims = {selectedSim:'', availableSims:[]};
+				$scope.launchParams = '';
+				if (!$cookies.emulator) {
+
+					location.href = 'login.html';
+					return;
+				}
+
+				$http.get('/xlsim/simLaunch/testing/getSims').success(function(result) {
+
+					$scope.sims.availableSims = result.sims;
+				})
+				$scope.sessions = {data:[]};
+				$http.get('/xlsim/simLaunch/testing/getSessions').success(function(result) {
+
+					var d = result.sessions;
+					d.sort(function(a, b) {
+
+						var firstnameA = a.custom_firstname + ' ' + a.custom_lastname;
+						var firstnameB = b.custom_firstname + ' ' + b.custom_lastname;
+
+						if (firstnameA < firstnameB)
+							return -1;
+						else if (firstnameA > firstnameB)
+							return 1;
+						else {
+
+							if (a.custom_assignmenttitle < b.custom_assignmenttitle)
+								return -1;
+							else if (a.custom_assignmenttitle > b.custom_assignmenttitle)
+								return 1;
+							else {
+
+								if (a.target_app < b.target_app)
+									return -1
+								else if (a.target_app > b.target_app)
+									return 1;
+								else return 0;
+							}
+
+						}						
+					});
+					$scope.sessions.data = result.sessions;
+				});
+
+				$scope.$watch('sessions', function() {
+
+					console.log('session changed');
+				}, true);
+
+				$scope.getMySession = function() {
+
+					$http.get('/xlsim/simLaunch/testing/getMySession').success(function(result) {
+
+						$scope.djangoSession = result.session;
+						$scope.user_id = result.user_id;
+						$scope.context_id = result.context_id;
+						$scope.user_name = result.user_name;
+						$scope.assignment = result.assignment;
+						$scope.simName = result.sim_name;
+						$scope.url = result.url;
+						$scope.hasSession = true;
+					}).error(function() {
+
+						$scope.hasSession = false;
+					});					
+				}
+				$scope.getMySession();
+
+				$scope.advancedAPIShown = false;
+				$scope.showAdvanced = function() {
+					
+					$scope.advancedAPIShown = true;
+				}
+				$scope.hideAdvanced = function() {
+					
+					$scope.advancedAPIShown = false;
+				}
+				
+				$scope.showForm = function() {
+
+					$scope.formShown = true;
+				}
+
+				$scope.closeForm = function() {
+
+					$scope.formShown = false;
+				}
+
+				/*$scope.removeSession = function(idx) {
+
+					var s =$scope.sessions[idx];
+					param = 'user_id=' + encodeURIComponent(s.user_id) + '&context_id=' + encodeURIComponent(s.context_id) + '&sim_name=' + encodeURIComponent(s.sim_name)
+					$http({
+						method:'POST', 
+						url:'/xlsim/simLaunch/testing/removeSession', 
+						data:param,
+						headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+					}).success(function() {
+
+						$scope.getMySession();
+						$http.get('/xlsim/simLaunch/testing/getSessions').success(function(result) {
+
+							$scope.sessions = result.sessions;
+						})
+					})
+				}*/
+
+				$scope.mockLaunch = function(idx) {
+
+					var params = [];
+					$scope.message = '';
+					/*if (typeof idx == 'number') {
+						$('input[name="user_id"]').val($scope.sessions[idx].user_id);
+						$('input[name="context_id"]').val($scope.sessions[idx].context_id);
+						$('input[name="custom_target_1"]').val($scope.sessions[idx].sim_name)
+						else
+							params[params.length] = 'custom_mode=' + $('input:checked[name="custom_mode"]').val();
+					}*/
+					var mode = $('input:checked[name="mode_sel"]').val();
+					if (!mode) {
+						$scope.message = 'please select a mode to launch'
+						return;
+					}
+					for (var field in $scope.sessions.data[idx]) {
+
+						console.log('key ' + field + ', val ' + $scope.sessions.data[idx][field])
+						params[params.length] = field + '=' + encodeURIComponent($scope.sessions.data[idx][field]);
+
+					}
+
+					/*var inputs = $('form').find('input');
+					for (var i = 0; i < inputs.length; i++) {
+
+						if (inputs[i].type == 'radio') {
+
+							if (inputs[i].checked)
+								params[params.length] = inputs[i].name + '=' + inputs[i].value;
+						}
+						else
+								params[params.length] = inputs[i].name + '=' + encodeURIComponent(inputs[i].value);							
+					}*/
+					params = params.join('&');
+					$http({
+					    method: 'POST',
+					    url: '/xlsim/simLaunch/testing/mockLaunch/',
+					    data: params,
+					    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+					}).then(function(result) {
+
+						if (result.status == 200) {
+							$scope.simSession = $cookies.SimSession;
+							$scope.user_name = result.data.user_name;
+							$scope.assignment = result.data.assignment;
+							$scope.url = result.data.url;
+							$scope.simName = result.data.sim_name;
+							$scope.hasSession = true;
+							$scope.formShown = false;
+							$scope.feedback = false;
+							$('input[type="radio"]').attr('checked', false);
+						}
+						}, function(result) {
+							debugger;
+							
+					})					
+				}
+				$scope.apiCall = '';
+				$scope.selectCall = function(idx) {
+
+					$scope.feedback = false;
+					$scope.callIndex = idx;
+					switch (idx) {
+
+						case 1:
+							$scope.apiCall = '/xlsim/simLaunch/service/getLaunchParams';
+							break;
+						case 2:
+							$scope.apiCall = '/xlsim/simLaunch/service/getState';
+							break;
+						case 3:
+							$scope.apiCall = '/xlsim/simLaunch/service/getCustomData';
+							break;
+						case 4:
+							$scope.apiCall = '/xlsim/simLaunch/service/saveCustomData';
+							break;
+						case 5:
+							$scope.apiCall = '/xlsim/simLaunch/service/report';
+							break;
+					}
+				}
+				$scope.emulate = function() {
+
+					var params = 'csrfmiddlewaretoken=' + $cookies.csrftoken
+					switch($scope.callIndex) {
+
+						case 4:
+							params += '&data=' + encodeURIComponent($('textarea').val());
+							break;
+						case 5:
+							params += '&score=' + $('input[name="score"]').val() + '&time=' + $('input[name="time"]').val();
+
+					}
+					$scope.feedbackNote = ''
+					$scope.feedback = true;
+					$scope.feedbackStatus = 'fetching...';
+					$scope.apiCallMethod = 'POST';
+					$scope.apiCallEncoding = 'application/x-www-form-urlencoded'
+					$http({
+							method:'POST',
+							url:$scope.apiCall,
+							headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+							data:params
+						}).then(function(result) {
+
+							$scope.feedbackStatus = result.status + '=Success!';
+								
+							if (typeof result.data == 'object')
+								$scope.feedbackData = JSON.stringify(result.data);
+							else if (result.data == '')
+								$scope.feedbackData = 'None'
+							else
+								$scope.feedbackData = result.data;
+							$scope.callIndex = 0;
+							$('input[type="radio"]').attr('checked', false);
+							$scope.getMySession();
+							$scope.feedback = true;
+							if ($scope.apiCall == '/xlsim/simLaunch/service/report')
+								$scope.feedbackNote = 'Note : Reporting results terminates your session.'
+						}, function(result) {
+
+							$scope.feedbackStatus = result.status + '=Error!';
+							if (typeof result.data == 'object')
+								$scope.feedbackData = JSON.stringify(result.data);
+							else if (result.data == '')
+								$scope.feedbackData = 'None'
+							else
+								$scope.feedbackData = result.data;
+							$scope.callIndex = 0;
+							$('input[type="radio"]').attr('checked', false);
+							$scope.getMySession();
+
+						})
+				}
+
+			}]);
+		</script>
+		<link rel="stylesheet" href="css/emulator.css">
+
+	</head>
+
+	<body  ng-app="SimsEmulator">
+		<div ng-controller="EmulatorCntl">
+			<h1 class="header">
+				<div style="position:relative;left:-15px"><img src="image/red-hill-studios-logo.png"></div>
+				ATM SIM API Emulator
+			</h1>
+			<div>
+				<div  style="margin-left:20px;vertical-align:top;display:inline-block;width:500px">
+					<div style="vertical-align:top" id="sessionTable">
+						<!-- <button ng-click="showForm()" class="linkButton">Start New Session</button>-->
+						<h2>Available Sessions:{{sessions.data.length}}</h2>
+						<div style="margin-top:5px;]">Select a launch mode:
+							<input type="radio" name="mode_sel" value="do">&nbsp;Do
+							<input type="radio" name="mode_sel" value="preview">&nbsp;Preview
+							<input type="radio" name="mode_sel" value="practice">&nbsp;Practice
+							<input type="radio" name="mode_sel" value="do">&nbsp;Review
+							<input type="radio" name="mode_sel" value="setup">&nbsp;Setup
+						</div>		
+						<div style="color:red">{{message}}</div>
+						<table style="border:1px solid;vertical-align:top">
+							<thead><th>User Name</th><th>Assignment</th><th>Sim Name</th><th>&nbsp;</th></thead>
+							<tr ng-repeat="s in sessions.data track by $index">
+								<td>{{s.custom_firstname}} {{s.custom_lastname}}</td><td>{{s.custom_assignmenttitle}}</td><td>{{s.target_app}}</td>
+								<td nowrap>
+
+									<button class="linkButton" ng-click="mockLaunch($index)">launch</button>&nbsp;
+									<!-- <button class="linkButton" ng-click="removeSession($index)">remove</button>-->
+								</td>
+							</tr>
+						</table>
+					</div>	
+				</div>					
+				<div 	ng-show="sessions.length==0 || formShown" ng-include="'partials/launchForm.html'" 
+						style="vertical-align:top;width:600px;display:inline-block"></div>			
+				<div ng-include="'partials/emulatorWidget.html'" style="vertical-aign:top;margin-left:20px;display:inline-block"></div>	
+			</div>
+		</div>
+	</body>
+</html>
