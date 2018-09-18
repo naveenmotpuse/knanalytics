@@ -1,0 +1,58 @@
+.CustomSelBox {width: 200px !important;}
+
+.ql{font-family:"Open Sans"; font-size:16px;}
+.ql .title{width:96%; padding:2%;float:left}
+.ql .title .main,.ql .title .sub{width:100%;clear:both;}    
+.ql .title .sub {font-size:14px;}    
+.ql .title .main span{float:left; width:60%; font-size:24px; color:#007f9c;font-weight: bold;}
+.ql .title .main button {float: right;font-size: 14px; background-color: #007f9c; color: #FFFFFF;padding: 6px 8px;border-style: none; cursor:pointer;}
+.ql .charts{width:100%;height:300px;background-color:transparent;float:left;}
+.ql .tabs{width:100%;padding:5px;float: left;}
+.ql .tabs a{padding:5px 20px;color:#e1dfda;text-decoration:none;float:left;font-size: 18px; font-weight:bold;}
+.ql .tabs a:hover{color:#007f9c;}
+.ql .tabs a.selected{color:#007f9c;}
+.ql .tabs .vline{width:1px;height:30px;background-color:#007f9c;float:left;}
+.ql .hline{height:1px;width:100%;background-color:#007f9c;float:left;}
+.ql .analyticsResult{width:100%;}
+.ql .analyticsResult .tabContainer{float:left;width:100%;}
+.ql .hide{display:none;}
+.expand{background: url(/content/staticfiles/revelanalytics/images/result-bottom-ico.png) no-repeat; height: 9px;margin: 10px 6px 0px 10px;}
+.collapse{background: url(/content/staticfiles/revelanalytics/images/result-top-ico.png) no-repeat; height: 9px;margin: 10px 6px 0px 10px;}
+
+.correct,.incorrect,.partialcorrect,.qsnTitle,.tblQuestionDetails thead td{font-weight:700}
+.divOverviewOptionDetails,.optionAnswered{font-style:normal}
+.questionOverviewRow,.questionRow{cursor:pointer}
+#questionDetails{margin-top:15px;background-color:#FAFAFA;align-content:center;font-family:Arial;font-size:14px;padding:1px}
+.acrossQsTable{margin-top:15px}
+.qsnText{margin-left:15px}
+.optionText{margin-left:25px;display:inline-block}
+.optioninfo{margin-top:20px}
+.divoptions,.divoverviewoptions{float:left;margin-top:5px;margin-bottom:5px}
+.divoptions{width:58%}
+.divoverviewoptions{width:100%}
+.divoptionsData{background:#fff!important;border:1px solid #ECECEC;width:100%;margin-bottom:5px}
+.enlargedGraphDiv{width:40%;float:right}
+.optionAnswered{color:#868686;float:right}
+.questionRow{height:75px}
+.partialcorrect{color:#efc12b}
+.correct{color:#077c3c}
+.incorrect{color:#ef0b35}
+.tblQuestionDetails{width:98%;border-collapse:collapse;margin:10px}
+.tblQuestionDetails td span{padding:5px}
+.tblQuestionDetails tr.questionRow:not(:last-child) .questionRowDiv{background-color:#EBEBEB;border:1px solid #ECECEC;margin-bottom:4px;border-radius:3px}
+.tblQuestionDetails tr.questionRow .questionRowDiv:hover{background-color:#f2efef}
+.tblQuestionDetails tr.questionRow td{border:0}
+.questionDetailsRow .tdpercent{padding-left:10px}
+.tdOverviewoptiontexxt,.tdoption{padding-left:25px}
+.tbloveroptions tr td:first-child{padding:5px}
+.divoverviewoptionsData{background:#D5EAE5!important;border:1px solid #ECECEC;width:100%;margin-bottom:5px;float:left;}
+.divOverviewQuestionText{width:95%;height:auto;padding:10px;/*font-weight:700*/}
+.arrow-right{width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-left:7px solid #000;display:inline-block}
+.qsnTitle{margin-left:10px;display:inline}
+.tdoverviewPresented{color:#1A752D;font-size:14px;}
+.tblOverviewQuestionDetails td{padding:5px}
+.tblOverviewQuestionDetails{width:100%;border-collapse:collapse;}
+.tblStudentDetails { width: 100%;border-collapse: collapse;}
+.studentRow, .studentDetailRow {  cursor: pointer; }
+#ipStudentSearch{border-radius:5px;}
+.studentDisplayed {color: #007f9c; }

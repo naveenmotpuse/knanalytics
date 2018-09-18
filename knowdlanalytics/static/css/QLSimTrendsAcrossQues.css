@@ -1,0 +1,90 @@
+.CustomSelBox {width: 300px !important;}
+.questionRow { background-color: #ebebeb;}
+.divoptions {
+    float: left;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.divoptionsData {
+   background: #fff !important;
+    margin: 5px;
+    display: inline-block;
+    width: 60%;
+}
+
+.enlargedGraphDiv {
+    float: right;
+    display: inline-block;
+	margin-right: 10px;
+}
+
+.optionAnswered {
+    color: #868686;
+    font-style: italic;
+}
+
+.questionRow {
+    height: 75px;
+    cursor: pointer;
+}
+
+.partialcorrect {
+    color: #efc12b;
+    font-weight: bold;
+}
+
+.correct {
+    color: #077c3c;
+    font-weight: bold;
+}
+
+.incorrect {
+    color: #ef0b35;
+    font-weight: bold;
+}
+
+.tblQuestionDetails {
+    width: 98%;
+    border-collapse: collapse;
+    margin-left: 10px;
+}
+
+.tblQuestionDetails td span {
+    padding: 5px;
+}
+
+.tblQuestionDetails tr.questionRow {
+    background-color: #EBEBEB;
+    border: 1px solid #ECECEC;
+    margin-bottom: 2px;
+    border-radius: 3px;
+}
+
+.tblQuestionDetails tr.questionRow td {
+    border: 0;
+    padding: 10px;
+}
+
+.tblQuestionDetails .questionDetailsRow td {
+	    background-color: #fff;
+}
+
+.questionDetailsRow .tdpercent {
+    padding-left: 10px;
+}
+
+.tdoption {
+    padding-left: 20px;
+}
+
+.questionDetailsRow td {
+    border: 1px solid #ECECEC;
+}
+.innerTbl td {border:none;}
+
+#questionDetails {
+    margin-top: 15px;
+    background-color: #FAFAFA;
+    align-content: center;
+}

@@ -67,5 +67,6 @@ urlpatterns = patterns('',
     url(r'^acclaim/', include('acclaim.urls')),
     url(r'^media_library/',include('media_library.urls')),
     url(r'^importcsv/',include('importcsv.urls')),
+    url(r'^knowdlanalytics/',include('knowdlanalytics.urls')),
     #url(r'^teamassignmenttool',include('teamassignmenttool.urls')),
 )

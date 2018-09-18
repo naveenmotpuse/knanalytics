@@ -58,13 +58,12 @@
                 	<table class="tbloveroptions" style="width:100%;">
                        {% if questionDetail.OptionAlignment == "H" %}
                          <tr>
-                       		{% for option in questionDetail.Options %}
-                              {% AddPointImageOrNot question option as ret %}
+                       		{% for option in questionDetail.Options %}                              
                                   <td class="tdOverviewOptionImage" align="center">
-                                      <img src="/{{ret.imgsrc}}" height="60" width="60" />
+                                      <img src="/{{option.Image}}" height="60" width="60" />
                                       <div>
                                           {% if addPointImage == True %}
-                                          	<img src="{{ret.pointsImage}}" style="position:absolute;width:20px;" />
+                                          	<img src="{{option.PointsImage}}" style="position:absolute;width:20px;" />
                                           {% endif %}
                                           <div class="optionText" style="margin-left:5px;">{{option.Text}}</div>
                                       </div>
@@ -73,15 +72,14 @@
                           </tr>
                         {% else %}
                              {% for option in questionDetail.Options %}
-                                 <tr>
-                                     {% AddPointImageOrNot question option as ret %}
+                                 <tr>                                     
                                      <td class="tdOverviewOptionImage">
-                                         <img src="/{{ret.imgsrc}}" height="60" width="60" />
+                                         <img src="/{{option.Image}}" height="60" width="60" />
                                      </td>
                                          <td class="tdOverviewoptiontexxt">
                                              <div>
                                                  {% if addPointImage == True %}
-                                                     <img src="{{ret.pointsImage}}" style="position:absolute;width:20px;" />
+                                                     <img src="{{option.PointsImage}}" style="position:absolute;width:20px;" />
                                                  {% endif %}
                                                  <div class="optionText"> {{option.Text}}</div>
                                              </div>
@@ -91,7 +89,7 @@
                         {% endif %}
                           <tr><td colspan="4">
                               <div style="display:inline-block;position:absolute">
-                              	<img src="{{ret.pointsImage}}" style="width:20px;" /></div>
+                              	<img src="{{question.PointsImage}}" style="width:20px;" /></div>
                               <div style="display:inline-block;margin-left:25px;" class="FeedbackDiv">
                               	{{question.PointsObtained}} out of {{question.TotalPoints}} earned : {{ret.feedBackText|safe}}</div>
                               	</td>
@@ -118,7 +116,7 @@
 	 		arropimg[i].src = arropimg[i].src.replace(window.origin,top.location.href.substring(0,top.location.href.lastIndexOf("/")))
 	 	}
  } }
- setTimeout("fSetOptImgs()",1000)
+ //setTimeout("fSetOptImgs()",1000)
 
- setInterval("fSetOptImgs()",5000)
+ //setInterval("fSetOptImgs()",5000)
 </script>
