@@ -74,6 +74,7 @@ class QLStudentReportView :
         self.PageIndex = -1
         self.RecordCount = 0
         self.PageSize = 5
+        self.RelPackagePath = ""
     
 class QlQuestionMasterForStudentReport :
     def __init__(self):
@@ -82,7 +83,7 @@ class QlQuestionMasterForStudentReport :
         self.QuestionTitle = ""
         self.Options = [] # List<QlOption> 
         self.OptionAlignment = ""
-        self.OccurenceNo = ""
+        self.OccurenceNo = ""             
 
 class QlOption :
     def __init__(self):

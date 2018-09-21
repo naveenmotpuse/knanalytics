@@ -739,6 +739,7 @@ def GetStudentDetailModel(selsim, selloc, ASGN=""):
     qlSRV = Classes.QLStudentReportView()
     qlSRV.Results = []  # List<QLStudentDetails>()
     qlSRV.QuestionsDetails = []  # List<QlQuestionMasterForStudentReport>()
+    qlSRV.RelPackagePath = packagerelPath
 
     for qlMa in qlMasterAttempts:
         student = Classes.QLStudentDetails()
@@ -802,67 +803,7 @@ def GetStudentDetailModel(selsim, selloc, ASGN=""):
                         except Exception:
                             pass
 
-                        #question.Options = lstqloption
-                        for qloption in lstqloption:
-                            qlOptionReport = Classes.QlOptionReport()
-                            try:
-                                qlOptionReport.Text = qloption["Text"]
-                            except Exception as ine:
-                                qlOptionReport.Text = ''
-
-                            try:
-                                qlOptionReport.Status = qloption["Status"]
-                            except Exception as ine:
-                                qlOptionReport.Status = ''
-
-                            try:
-                                qlOptionReport.Points = qloption["Points"]
-                            except Exception as ine:
-                                qlOptionReport.Points = "0"
-
-                            try:
-                                qlOptionReport.Image = packagerelPath + \
-                                    "/" + qloption["Img"]
-                            except Exception as ine:
-                                qlOptionReport.Image = ""
-
-                            # print qloption["Points"]
-                            seloptid = ""
-                            try:
-                                seloptid = qloption["Id"]
-                            except Exception as ine:
-                                seloptid = ""
-                            '''
-                            filter5 = {"SelOptionId": seloptid}
-                            qlOptionReport.NumberOfTimesAnswered = lstattemptedforQuestion.filter(
-                                **filter5).count()
-
-                            percent = 0
-                            if qlOptionReport.NumberOfTimesAnswered > 0:
-                                percent = (float(qlOptionReport.NumberOfTimesAnswered) /
-                                        float(qlQDR.NumberOfTimesAnswered)) * 100
-                            '''
-                            if percent > 0:
-                                qlOptionReport.Percent = str(round(percent, 2)) + "%"
-                            '''
-                            if qlOptionReport.Status.lower() == "correct" and qlOptionReport.NumberOfTimesAnswered > 0:
-                                correctCnt += 1
-
-                            if qlOptionReport.Status.lower() == "incorrect" and qlOptionReport.NumberOfTimesAnswered > 0:
-                                incorrectCnt += 1
-
-                            if qlOptionReport.Status.lower() == "partial" and qlOptionReport.NumberOfTimesAnswered > 0:
-                                partialCorrCnt += 1
-                            '''
-
-                            if qlOptionReport.Points >= 5:
-                                qlOptionReport.PointsImage = k_ANALYTICS_STATIC + "images/5point.png"
-                            else:
-                                qlOptionReport.PointsImage = k_ANALYTICS_STATIC + \
-                                    "images/" + str(qlOptionReport.Points) + "point.png"
-
-                            question.Options.append(qlOptionReport)
-                        #end option
+                        question.Options = lstqloption
 
                     question.OccurenceNo = ""
 

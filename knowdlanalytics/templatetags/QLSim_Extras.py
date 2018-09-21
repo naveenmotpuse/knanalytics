@@ -46,7 +46,7 @@ def AddPointImageOrNot(question, option):
     if option["Id"] == question.SelectedOption :
         imgsrc = option["rolloverImg"]
         feedBackText = option["FeedbackText"]
-        pointsImage = question.PointsImage
+        pointsImage =  question.PointsImage
         addPointImage = True
     else :
         imgsrc = option["Img"]
