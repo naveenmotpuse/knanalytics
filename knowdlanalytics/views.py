@@ -5,6 +5,7 @@ Created on Apr 13, 2017
 updated on Oct 25, 2017
 @author: anuja
 '''
+import requests
 from knowdlanalytics import models as m, Classes
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -52,9 +53,7 @@ def QLInteractionProcess(request):
         if command == "launch":
             returnResponse = fPostAssignmentData(jsondatavalues, "")
         elif command == "updateattemptdata":
-            returnResponse = fPostAttemptData(jsondatavalues, "")
-        elif command == "classaverage":
-            returnResponse = fGetClassAverage(jsondatavalues, "")
+            returnResponse = fPostAttemptData(jsondatavalues, "")        
 
     except Exception as e:
             #DBLog("QL Interaction Error: Command=" + command + ", jsondata=" + "", e);
@@ -144,23 +143,6 @@ def fPostAttemptData(jsondatavalues, location):
                 returnValue = returnValue + "-qlma.Score:" + str(qlma.Score)
                 if qlma.Score is not None and maxscore < qlma.Score:
                     qlma.ReportStatus = "active"
-                    scorediff = Decimal(str(qlma.Score)) - \
-                        Decimal(str(maxscore))
-                    filter23 = {"Assignment_Id": assignmentId,
-                                "AdditionalField1": qlId}
-                    try:
-                        qlassigadddeta = m.ql_assignmentadditionaldetails.objects.get(
-                            **filter23)
-                        returnValue = returnValue + "TotalScore:" + \
-                            str(qlassigadddeta.TotalScore) + \
-                            "-scorediff:" + str(scorediff)
-                        qlassigadddeta.TotalScore = qlassigadddeta.TotalScore + scorediff
-                        returnValue = returnValue + "after sum - TotalScore:" + \
-                            str(qlassigadddeta.TotalScore)
-                        qlassigadddeta.save()
-                    except Exception as innr:
-                        returnValue = returnValue + \
-                            "TotalScore update Error:" + str(innr)
 
                 qlma.EndDate = datetime.now()
                 qlma.AssignmentLocation = ""
@@ -296,45 +278,6 @@ def AddQuestionDetails(qlma, jsondatavalues):
     return retval
 
 
-def fGetClassAverage(jsondatavalues, loc):
-    returnValue = ""
-    try:
-        assignmentId, qlId, loc = "", "", ""
-        if "Assignment_Id" in jsondatavalues:
-            assignmentId = jsondatavalues["Assignment_Id"]
-
-        if "QL_Id" in jsondatavalues:
-            qlId = jsondatavalues["QL_Id"]
-
-        try:
-            filterAvg = {"Assignment_Id": assignmentId,
-                         "AdditionalField1": qlId}
-            qlAssignmentAvg = m.ql_assignmentadditionaldetails.objects.filter(
-                **filterAvg).values("TotalScore", "NumOfUsers").all()
-            if qlAssignmentAvg.count() > 0 and Decimal(str(qlAssignmentAvg[0]["NumOfUsers"])) > 0:
-                returnValue = Decimal(str(
-                    qlAssignmentAvg[0]["TotalScore"]))/Decimal(str(qlAssignmentAvg[0]["NumOfUsers"]))
-
-        except Exception as excp:
-            returnValue = ""
-
-        if returnValue == "":
-            filterMaxScr = {"Assignment_Id": assignmentId,
-                            "QL_Id": qlId, "ReportStatus": "active"}
-            avgscore = m.ql_masterattempts.objects.filter(
-                **filterMaxScr).aggregate(Avg('Score'))
-            try:
-                returnValue = str(round(avgscore["Score__avg"], 2))
-            except Exception as inr:
-                returnValue = str(0.0)
-
-    except Exception as e:
-            #DBLog("QL Interaction Error: Command=GetClassAverage jsondata=" + "", e);
-        returnValue = str(e)
-
-    return returnValue
-
-
 def fPostAssignmentData(jsondatavalues, location):
     returnValue = "Begin 111 fPostAssignmentData:"
 
@@ -401,13 +344,6 @@ def fPostAssignmentData(jsondatavalues, location):
             diad = m.ql_assignmentdetails.objects.create(Assignment_Id=assignmentId, QL_Id=qlId, NumberOfAttempts=numberOfAttempts, TargetPoints=targetPoints,
                                                          QLTitle=qlTitle, AssignmentTitle=assignmentTitle, Status=True, ObjectiveDetails=str(objectiveDetails))
 
-            returnValue = returnValue + "create ql_assignmentadditionaldetails:"
-            assadddet = m.ql_assignmentadditionaldetails.objects.create(
-                Assignment_Id=assignmentId, AdditionalField1=qlId, TotalScore=0, NumOfUsers=0,  AdditionalField2="", AdditionalField3="")
-            returnValue = returnValue + \
-                "after create ql_assignmentadditionaldetails:" + \
-                str(assadddet.Id)
-
         filter1['Student_Id'] = studentId
         returnValue = returnValue + "hij Id:"
         attemCount = m.ql_masterattempts.objects.filter(**filter1).count()
@@ -434,22 +370,7 @@ def fPostAssignmentData(jsondatavalues, location):
                                                           Session_Id=sessionId, StudentName=studentName, Score=0, Points=0, Role=role, QL_Id=qlId, CompletionStatus='inprogress',
                                                           TimeSpent=0, ReportStatus=ReportStatus, StartDate=datetime.now(), EndDate=datetime.now())
 
-                if attemCount <= 0:
-                    filter231 = {"Assignment_Id": assignmentId,
-                                 "AdditionalField1": qlId}
-                    try:
-                        qlassigadddeta = m.ql_assignmentadditionaldetails.objects.get(
-                            **filter231)
-                        returnValue = returnValue + "NumOfUsers:" + \
-                            str(qlassigadddeta.NumOfUsers)
-                        qlassigadddeta.NumOfUsers = qlassigadddeta.NumOfUsers + 1
-                        returnValue = returnValue + "after sum - NumOfUsers:" + \
-                            str(qlassigadddeta.NumOfUsers)
-                        qlassigadddeta.save()
-                    except Exception as innr:
-                        returnValue = returnValue + \
-                            "NumOfUsers Update Error:" + str(innr)
-
+                
         returnValue = returnValue + " - Launch Data Success"
 
     except Exception as e:
@@ -489,7 +410,9 @@ def QLSimTrendsAcrossQuesDetails(request):
     selsim = request.GET.get('selsim', None)
     selloc = request.GET.get('selloc', None)
 
-    qlQDRV = GetQuestionDetailsModel(selsim, selloc)
+    urlorigin = "https://" + request.META.get("HTTP_HOST")  
+
+    qlQDRV = GetQuestionDetailsModel(urlorigin, selsim, selloc)
 
     # Obtain the context from the HTTP request.
     context = RequestContext(request)
@@ -552,7 +475,8 @@ def QLSimOverview(request):
     selsim = request.GET.get('QL_Id', None)
     #selloc = request.GET.get('LOC', None)
     ASGN = request.GET.get('ASGN', None)
-    qlQDRV = GetQuestionDetailsModel(selsim, "", ASGN)
+    urlorigin = "https://" + request.META.get("HTTP_HOST") 
+    qlQDRV = GetQuestionDetailsModel(urlorigin, selsim, "", ASGN)
     # Obtain the context from the HTTP request.
     context = RequestContext(request)
 
@@ -570,7 +494,8 @@ def QLSimClassReport(request):
     selsim = request.GET.get('QL_Id', None)
     selloc = request.GET.get('LOC', None)
     ASGN = request.GET.get('ASGN', None)
-    qlQDRV = GetQuestionDetailsModel(selsim, selloc, ASGN, True)
+    urlorigin = "https://" + request.META.get("HTTP_HOST") 
+    qlQDRV = GetQuestionDetailsModel(urlorigin,selsim, selloc, ASGN, True)
     # Obtain the context from the HTTP request.
     context = RequestContext(request)
 
@@ -588,7 +513,8 @@ def QLSimStudentReport(request):
     selsim = request.GET.get('QL_Id', None)
     #selloc = request.GET.get('LOC', None)
     ASGN = request.GET.get('ASGN', None)
-    qlQDRV = GetStudentDetailModel(selsim, "", ASGN)
+    urlorigin = "https://" + request.META.get("HTTP_HOST") 
+    qlQDRV = GetStudentDetailModel(urlorigin, selsim, "", ASGN)
     # Obtain the context from the HTTP request.
     context = RequestContext(request)
 
@@ -713,11 +639,11 @@ def GetOutcomesModel(selsim, selloc, ASGN=""):
     return model
 
 
-def GetStudentDetailModel(selsim, selloc, ASGN=""):
+def GetStudentDetailModel(urlorigin, selsim, selloc, ASGN=""):
     selsim = selsim.decode('unicode-escape')
     filter1 = {"QL_Id": selsim}
     lstQLMasterQ = m.ql_masterquestions.objects.filter(**filter1).all()
-    packagerelPath = getOptionPath(selsim)
+    packagerelPath = getOptionPath(urlorigin, selsim)
     filter2 = {"QL_Id": selsim, 'ReportStatus': 'active'}
     qlMasterAttempts = None
 
@@ -768,7 +694,7 @@ def GetStudentDetailModel(selsim, selloc, ASGN=""):
             for std in stuattempts:
                 statt = Classes.QLStudentAttempt()
                 statt.AttemptNo = k
-                statt.Score = 0.00 if std.Score is None else std.Score
+                statt.Score = 0.00 if std.Score is None else float("{0:.2f}".format(std.Score)) 
                 statt.SessionId = std.Session_Id
                 student.Attempts.append(statt)
                 k = k + 1
@@ -868,13 +794,13 @@ def GetStudentDetailModel(selsim, selloc, ASGN=""):
     return qlSRV
 
 
-def GetQuestionDetailsModel(selsim, selloc, ASGN="", isStudentDetails=False):
+def GetQuestionDetailsModel(urlorigin, selsim, selloc, ASGN="", isStudentDetails=False):
     # 'unicode-escape' is used to escape sequences in string
     selsim = selsim.decode('unicode-escape')
 
     filter1 = {"QL_Id": selsim}
     lstQLMasterQ = m.ql_masterquestions.objects.filter(**filter1).all()
-    packagerelPath = getOptionPath(selsim)
+    packagerelPath = getOptionPath(urlorigin, selsim)
     '''
     if (packagerelPath.find('/qualsims') != -1):
         packagerelPath = packagerelPath.replace('/qualsims', 'content/qualsims/')   
@@ -1216,35 +1142,54 @@ def ObjectExistInArray(arr, prop, val):
     return False
 
 
-def getOptionPath(qlid):
-    pkgPath = ''
+def getOptionPath(urlorigin, qlid):
+    pkgPath = qlid
     if (qlid.find('qualsims') != -1):
-        pkgPath = qlid.replace(
-            '/armstrong', '').replace('/kotler', '').replace('/solomon', '')
-        pkgPath = pkgPath.replace('/ebert', '').replace('/bovee', '')
-        pkgPath = pkgPath.replace('/certo', '').replace('/robbins10 Simulation', '').replace(
-            '/robbins10', '').replace('/robbins14', '').replace('/robbins17', '').replace('/wheelen', '')
-        pkgPath = pkgPath.replace('/david', '').replace('/barringer', '').replace(
-            '/dressler', '').replace('/mariotti', '').replace('/scarborough', '')
-        pkgPath = pkgPath.replace(
-            '/cheeseman', '').replace('/robbins8e', '').replace('/gibson10e', '')
-        pkgPath = pkgPath.replace('-', '_')
-        pkgPath = pkgPath.replace('qualsims', '/qualsims')
-        pkgPath = pkgPath.replace('/qualsims', 'content/qualsims')
+        jsonconf = '{"projects": [{"id":"qualsims","users": ["armstrong"]}]}'
+        data = json.loads(jsonconf)
+        try:                                   
+            data = getUserMappings(urlorigin)                           
+        except Exception:
+            pass
 
-    return pkgPath
+        for project in data["projects"]:
+            if (project["id"] == "qualsims"):
+                lousers = project['users']
+                lousers.sort(key = lambda s: len(s), reverse=True)
+                for louser in lousers:
+                    pkgPath = rreplace(pkgPath, '/'+louser, '', 1)
+
+    return "content/" + pkgPath
+
+def rreplace(s, old, new, occurence = 1):
+    if occurence == 0:
+        return s
+    left, found, right = s.rpartition(old)
+    if found == "":
+        return right
+    else:
+        return rreplace(left, old, new, occurence - 1) + new + right
+
+
+def getUserMappings(urlorigin):
+    user_mappings = {}
+    try:            
+        r = requests.get(urlorigin + '/content/qualsims/LOusersData.json')
+        if r.status_code == 200:
+            user_mappings = r.json()	   
+        else:    
+	        user_mappings = json.loads('{"projects": [{"id": "qualsims","users": ["robbins14global"]}]}')
+    except Exception as jsonexc:
+	    user_mappings = json.loads('{"projects": [{"id": "qualsims","users": ["robbins14global"]}]}')
+
+    return user_mappings
+    
 
 
 @csrf_exempt
 def fGetAddData(request):
     try:
-        qlassigadddeta = m.ql_assignmentadditionaldetails.objects.all()
-        resstr = str(len(qlassigadddeta))
-        if len(qlassigadddeta) > 0:
-            for qlassigadddetasingl in qlassigadddeta:
-                resstr = resstr + "<br>QL Id=" + str(qlassigadddetasingl.AdditionalField1) + "Assign Id=" + str(
-                    qlassigadddetasingl.Assignment_Id) + "Total score=" + str(qlassigadddetasingl.TotalScore) + " Number of users=" + str(qlassigadddetasingl.NumOfUsers)
-
+        resstr = 'Removed from Services'
     except Exception as e:
         resstr = resstr + str(e)
 

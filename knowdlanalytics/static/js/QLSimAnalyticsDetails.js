@@ -673,18 +673,9 @@ $(".student_review_link").live("click", function () {
     var sid = $(this).attr("sid");
     var attindex = $(this).attr("attno");
     var qlid = $(this).attr("qlid");
-    var temp_problem_guid = gQLId;
-	if (temp_problem_guid.indexOf('/business/it/') != -1){
-	            temp_problem_guid = k_identifier_val
-	}
-	else{
-	    temp_problem_guid = temp_problem_guid.replace('/armstrong', '').replace('/kotler', '').replace('/solomon', '')
-	    temp_problem_guid = temp_problem_guid.replace('/ebert', '').replace('/bovee', '')
-	    temp_problem_guid = temp_problem_guid.replace('/certo', '').replace('/robbins10 Simulation', '').replace('/robbins10', '').replace('/robbins14', '')
-	temp_problem_guid = temp_problem_guid.replace('/david','').replace('/barringer','').replace('/dressler','').replace('/mariotti','').replace('/scarborough','')
-	}
-    temp_problem_guid = temp_problem_guid.replace('-', '_');
-    var reviewurl = document.location.protocol + "/content/" + temp_problem_guid + "/#/" + sid + "/?att=" + attindex + "&mode=review";
+    var temp_problem_guid = $(this).attr("pkgpath");
+	
+    var reviewurl = document.location.protocol + "/" + temp_problem_guid + "/#/" + sid + "/?att=" + attindex + "&mode=review";
     window.open(reviewurl, sid);
 });
 

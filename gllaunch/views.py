@@ -262,13 +262,13 @@ def rreplace(s, old, new, occurence = 1):
         return rreplace(left, old, new, occurence - 1) + new + right
     
 
-def getUserMappings(urlorigin):
+def oldgetUserMappings(urlorigin):
     user_mappings = {}
     user_mappings = json.loads('{ "projects": [ { "id": "qualsims", "users": ["armstrong14","dessler16","solomon10","glackin5","tuckwell","wild8e","griffin8e","wild","cheeseman10","barringer6","certo15","moriarty","barney","dessler4","dessler5","scarborough9","scarborough8","martocchio","ebert12","ebert11","robbins14global","armstrong","kotler","solomon","ebert","bovee","certo","robbins10 Simulation","robbins10","robbins14","robbins17","robbins18","wheelen","david","barringer","dressler","mariotti","scarborough","cheeseman","robbins8e","gibson10e","armstrong7e","capstone","pom17global","robbinsmgmt14ge"] } ] }')
     return user_mappings
 
 
-def oldgetUserMappings(urlorigin):
+def getUserMappings(urlorigin):
     user_mappings = {}
     try:            
         r = requests.get(urlorigin + '/content/qualsims/LOusersData.json')

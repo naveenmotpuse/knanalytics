@@ -103,7 +103,6 @@ if (typeof (isModuleLoaded) === 'undefined') {
     var g_TPIDuration = 0;
     var g_requestNo = 0;
 
-    //NM:21-July-2017 - bookmark page logic is changed from page index to page Id.
     var attempt = {
         //"no": 1,
         "status": "new",
@@ -145,19 +144,17 @@ if (typeof (isModuleLoaded) === 'undefined') {
         var _globals = {}
 
         //var _knowdlPostUrl = "http://dev.knowdl.com/qlinteraction/process";
-        var _knowdlPostUrl = "https://stage1.knowdl.com/qlinteraction/process"
-        //var _knowdlPostUrl = "http://54.204.34.209/knowdlanalytics/QLInteractionProcess/"
+        //var _knowdlPostUrl = "https://stage1.knowdl.com/qlinteraction/process"
+        var _knowdlPostUrl =  window.location.origin + "/knowdlanalytics/QLInteractionProcess/"
 
         var _questionstarttime = new Date();
 
         var _classAverage = 0;
-
         var _MQAdditionalInfo = [];
         var QL_Settings = {
             IsQualsim: true,
             CA_Dial_Off_SR: false
         }
-
         return {
             get_Settings: function () {
                 return QL_Settings;
@@ -239,7 +236,7 @@ if (typeof (isModuleLoaded) === 'undefined') {
                 var objective = "";
                 if (knowdldebugMode) debugger;
                 if (_globals.QL_Id == undefined || _globals.QL_Id == "") {
-                    _globals.QL_Id = "qualsims/marketing/marketing-mix/tuckwell";
+                    _globals.QL_Id = "qualsims/marketing/marketing-plan/kotler";
                 }
                 for (var i = 0; i < ObjectiveDefinitions.length; i++) {
                     //Commented for now to run locally            
@@ -263,6 +260,7 @@ if (typeof (isModuleLoaded) === 'undefined') {
                 return local_qTitle;
             },
             GetMQAdditionalInfo: function (paramqId) {
+                debugger;
                 var retObj = "";
 
                 for (var i = 0; i < _MQAdditionalInfo.length; i++) {
@@ -274,36 +272,42 @@ if (typeof (isModuleLoaded) === 'undefined') {
 
                 return retObj;
             },
-            getClassAverage: function () {
+            //NM:10Sep - stage1 avg score dependency removal.
+            //Updated this method to call get avgscore from econdip server.
+            //This method is called from KnowdlTracking.SetCompletion() and _graphUtility.drawPieChartB()
+            getClassAverage: function (updateandget) {
                 if (knowdldebugMode) debugger;
-                //var localparams = { "QL_Id": _globals.QL_Id, "ASGN": _globals.Assignment_Id, "LOC": _globals.AssignmentLocation, "AssignmentLocation": _globals.AssignmentLocation };
-                var localparams = {
-                    "QL_Id": _globals.QL_Id,
-                    "Assignment_Id": _globals.Assignment_Id
-                };
-                var jsonSerialized = JSON.stringify(localparams);
-                //var servcUrl = _knowdlPostUrl + "?command=classaverage";
-                var servcUrl = _knowdlPostUrl + "";
-                $.ajax({
-                    type: "POST",
-                    async: false,
-                    url: servcUrl,
-                    data: {
-                        jsondata: jsonSerialized,
-                        'command': 'classaverage'
-                    },
-                    success: function (result) {
-                        if (result != undefined && $.trim(result) != "") {
-                            _classAverage = Number(result);
-                        }
-                    },
-                    error: function (error) {
-                        _classAverage = 0;
+                if (IsRevel()) {
+                    return;
+                }
+                var maxscore = TPIAttempts.Attempts[TPIAttempts.Attempts.length - 1].maxscore;
+                if (maxscore == undefined) {
+                    maxscore = -1;
+                }
+                maxscore = Number(maxscore)
+                var score = QLSimModule.GetTotalScore();
+                if (score == undefined) {
+                    score = 0;
+                }
+                score = Number(score)
+                var scoreDiff = -1;
+                if (maxscore == -1) {
+                    if (updateandget != undefined && updateandget == "updateandget") {
+                        scoreDiff = score;
                     }
-                });
-
+                } else if (score > maxscore) {
+                    if (updateandget != undefined && updateandget == "updateandget") {
+                        scoreDiff = (score - maxscore);
+                    } else {
+                        scoreDiff = -1;
+                    }
+                } else {
+                    scoreDiff = -1;
+                }
+                _classAverage = ServiceCalls.get_class_average(_globals.QL_Id, _globals.Assignment_Id, maxscore, scoreDiff)
                 return _classAverage;
             },
+
             PostQuestionData: function (qObj) {
                 //this method is called in UpdateAttemptMaxScore->UpdateUserAttempts to post question data
                 //Need to call on pages where UpdateAttemptMaxScore is not called.
@@ -350,6 +354,9 @@ if (typeof (isModuleLoaded) === 'undefined') {
                     _data.QDetails = {};
                     _data.CompletionStatus = "complete";
                     this.PostData(false);
+                    //NM:10Sep - stage1 avg score dependency removal.
+                    //First call to getClassAverage() - Is to update score only when completion is marked.
+                    this.getClassAverage("updateandget");
                 }
             },
             RetryAttempt: function () {
@@ -361,6 +368,9 @@ if (typeof (isModuleLoaded) === 'undefined') {
                 }
             },
             PostLaunchData: function (p_async) {
+                if (IsRevel()) {
+                    return;
+                }
                 var _async = true;
                 if (TPIData.Mode.trim().toLowerCase() == LaunchMode.do) {
                     if (p_async != undefined && p_async == false) {
@@ -373,7 +383,7 @@ if (typeof (isModuleLoaded) === 'undefined') {
                     var servcUrl = _knowdlPostUrl;
                     $.ajax({
                         type: "POST",
-                        async: _async,
+                        async: true,
                         url: servcUrl,
                         data: {
                             jsondata: jsonSerialized,
@@ -390,6 +400,9 @@ if (typeof (isModuleLoaded) === 'undefined') {
             },
 
             PostData: function (p_async) {
+                if (IsRevel()) {
+                    return;
+                }
                 var _async = true;
                 //if (TPIData.Mode.trim().toLowerCase() == LaunchMode.do && (typeof g_reachedSummary == 'undefined' || g_reachedSummary == false)) {
                 if (TPIData.Mode.trim().toLowerCase() == LaunchMode.do) {
@@ -423,10 +436,10 @@ if (typeof (isModuleLoaded) === 'undefined') {
                     //replace special characters.
                     //jsonSerialized = jsonSerialized.replace(/[^a-zA-Z ',"<>!~@#$%&*.+-=|\?()\[\]_{}\\ ]/g, "").replace(/&/g, '%26');
                     //var servcUrl = _knowdlPostUrl + "?command=updateattemptdata";
-                    var servcUrl = _knowdlPostUrl + "";
+                    var servcUrl = _knowdlPostUrl;
                     $.ajax({
                         type: "POST",
-                        async: _async,
+                        async: true,
                         url: servcUrl,
                         data: {
                             jsondata: jsonSerialized,
@@ -473,8 +486,37 @@ var ServiceCalls = (function () {
                 reviewModeNo = Number(Utility.getParameterByName("att", window.location.href));
             }
         },
+        //NM:10Sep - stage1 avg score dependency removal.
+        //Added new service to get avgScore from econdip server.
+        //This function is called from KnowdlTracking.getClassAverage() method.
+        get_class_average: function (qlid, asgnid, maxscore, score) {
+            var _classAverage = 0;
+            if (IsRevel()) {
+                return;
+            }
+            if (knowdldebugMode) debugger;
+            var servcUrl = _serviceurl + "/data/econ/common_services/get_class_average/?qlid=" + qlid + "&asgnid=" + asgnid + "&maxscore=" + maxscore + "&score=" + score;
+            $.ajax({
+                type: "GET",
+                async: false,
+                url: servcUrl,
+                success: function (result) {
+                    if (result != undefined && $.trim(result) != "") {
+                        _classAverage = Number(result);
+                    }
+                },
+                error: function (error) {
+                    _classAverage = 0;
+                }
+            });
+
+            return _classAverage;
+        },
         //Get session data from server
         get_session_data: function () {
+            if (IsRevel()) {
+                return;
+            }
             if (knowdldebugMode) debugger;
             if (typeof g_reachedSummary == 'undefined' || g_reachedSummary == false) {
                 var _that = this;
@@ -486,7 +528,7 @@ var ServiceCalls = (function () {
                     async: false,
                     cache: false,
                     success: function (result) {
-                        debugger;
+                        if (knowdldebugMode) debugger;
                         TPIData.SessionData = JSON.parse(JSON.stringify(result));
                         TPIData.Mode = TPIData.SessionData.launch_data.custom_mode;
                         if (TPIData.Roles != UserRoles.presenter) {
@@ -503,7 +545,7 @@ var ServiceCalls = (function () {
 
                         if (Utility.getParameterByName("mode", window.location.href) === LaunchMode.review) {
                             TPIData.Mode = LaunchMode.review;
-                            var attindx = Number(Utility.getParameterByName("att", window.location.href));
+                            var attindx = Utility.getParameterByName("att", window.location.href)
                             lastAtmtData = _that.GetAttemptData(attindx, false); //synchronous get last attempt
                             TPIAttempts = JSON.parse(lastAtmtData.state_data);
                         } else {
@@ -530,7 +572,6 @@ var ServiceCalls = (function () {
                             atmptIndx = TPIAttempts.Attempts.length - 1;
                         }
 
-                        debugger;
                         if (TPIAttempts.Attempts[atmptIndx].duration)
                             g_TPIDuration = Number(TPIAttempts.Attempts[atmptIndx].duration);
 
@@ -539,13 +580,13 @@ var ServiceCalls = (function () {
                         }
                         //DDeva:31/01/2017 - multiple attempt functionality
                         /*
-                                                            if (TPIAttempts.Attempts[TPIAttempts.Attempts.length - 1].reqdData.tempbookmarkData != undefined) {
-                                                                tempbookmarkData = TPIAttempts.Attempts[TPIAttempts.Attempts.length - 1].reqdData.tempbookmarkData;
-                                                            }
-                                                            if (TPIData.Mode === LaunchMode.review && tempbookmarkData) {
-                                                                TPIAttempts.Attempts[TPIAttempts.Attempts.length - 1].reqdData.bookmarkData = tempbookmarkData;
-                                                            }
-                                                            */
+                                                if (TPIAttempts.Attempts[TPIAttempts.Attempts.length - 1].reqdData.tempbookmarkData != undefined) {
+                                                    tempbookmarkData = TPIAttempts.Attempts[TPIAttempts.Attempts.length - 1].reqdData.tempbookmarkData;
+                                                }
+                                                if (TPIData.Mode === LaunchMode.review && tempbookmarkData) {
+                                                    TPIAttempts.Attempts[TPIAttempts.Attempts.length - 1].reqdData.bookmarkData = tempbookmarkData;
+                                                }
+                                                */
                         if (typeof TPIAttempts.Attempts[atmptIndx].requestNo !== "undefined") {
                             g_requestNo = TPIAttempts.Attempts[atmptIndx].requestNo;
                         }
@@ -556,7 +597,9 @@ var ServiceCalls = (function () {
                         } else {
                             KnowdlTracking.InitLaunch(true);
                         }
-
+                        //NM:21-July-2017 - bookmark page logic is changed from page index to page Id.
+                        //We are not removing lastVisitedPgIndex prop but will not use it.
+                        //will use newly added lastVisitedPgId prop.
                         if (TPIData.Mode === LaunchMode.do) {
                             if (TPIAttempts.Attempts !== undefined &&
                                 atmptIndx >= 0 && (TPIAttempts.Attempts[atmptIndx].lastVisitedPgIndex - 1) > 0) {
@@ -609,7 +652,19 @@ var ServiceCalls = (function () {
         },
         // save session data
         SaveSessionData: function (isRetrieve, asyncParam, closecallback) {
-            debugger;
+            if (IsRevel()) {
+                SetRevelStateData();
+                if ((gPages[0].PageId + "") != (gCurrPageObj.PageId + "")) {
+                    if (k_Revel.get_LaunchData().mode == LaunchModes.do) {
+                        var r_locdata = k_Revel.get_LocalData();
+                        if (r_locdata != undefined && r_locdata.CompletionStatus != "complete") {
+                            var percScore = QLSimModule.GetTotalScore();
+                            k_Revel.PostData(Number(percScore), (Number(percScore) / 100), true);
+                        }
+                    }
+                }
+                return;
+            }
             if (TPIData.Mode.trim().toLowerCase() != LaunchMode.review) {
                 //TPIAttempts.Attempts[atmptIndx].no = atmptIndx + 1; //no use
                 if (TPIAttempts.Attempts[atmptIndx].status != "complete") {
@@ -656,6 +711,9 @@ var ServiceCalls = (function () {
             }
         },
         GetLastAttemptData: function (asyncStatus) {
+            if (IsRevel()) {
+                return;
+            }
             //if (TPIData.Mode.trim().toLowerCase() == LaunchMode.do) {
             var servcUrl = _serviceurl + "/data/econ/common_services/get_qlsim_lastattempt_data/?sessionId=" + TPIData.SessionId;
             $.fancybox.showActivity();
@@ -679,6 +737,9 @@ var ServiceCalls = (function () {
         },
         //NM - Get users attempt count, status can be configured, for now it is hardcoded to 'complete'
         GetUserAttemptCount: function (asyncStatus) {
+            if (IsRevel()) {
+                return;
+            }
             /*http://dev.econdip.pearsoncmg.com/econservice/data/econ/common_services/get_qlsim_attempt_count/?sessionId=[sessionId]&status=complete */
             var servcUrl = _serviceurl + "/data/econ/common_services/get_qlsim_attempt_count/?sessionId=" + TPIData.SessionId + "&status=complete";
             $.fancybox.showActivity();
@@ -699,9 +760,11 @@ var ServiceCalls = (function () {
             });
             return outResult;
         },
-
         //DDeva:07/02/2017 - initializing attempt code
         InitAttemptData: function () {
+            if (IsRevel()) {
+                return;
+            }
             if (TPIData.Mode.trim().toLowerCase() == LaunchMode.do) {
                 var jsonSerialized = JSON.stringify({
                     'sessionId': TPIData.SessionId,
@@ -729,6 +792,9 @@ var ServiceCalls = (function () {
         },
         // Send session data to server
         SaveAttempData: function (asyncParam, closecallback) {
+            if (IsRevel()) {
+                return;
+            }
             if (TPIData.Mode.trim().toLowerCase() == LaunchMode.do) {
                 asyncParam = typeof asyncParam == 'undefined' ? true : asyncParam;
                 var jsonSerialized = JSON.stringify({
@@ -823,6 +889,9 @@ var ServiceCalls = (function () {
         },
         // Get particular attempt data for review mode
         GetAttemptData: function (_atmtNo, asyncStatus) {
+            if (IsRevel()) {
+                return;
+            }
             if (TPIData.Mode.trim().toLowerCase() == LaunchMode.review) {
                 if (typeof _atmtNo == 'undefined') {
                     _atmtNo = 0;
@@ -871,6 +940,9 @@ var ServiceCalls = (function () {
         },
         //Send data to server for completion marking
         grade_problem_and_report: function (sampleObject, sid, p_gid) {
+            if (IsRevel()) {
+                return;
+            }
             if (TPIData.Mode.trim().toLowerCase() == LaunchMode.do) {
                 var jsonSerialized = JSON.stringify(sampleObject);
                 var servcUrl = _serviceurl + "/gldata/grade_problem_and_report/" + sid + "/" + p_gid + "/";
@@ -888,6 +960,9 @@ var ServiceCalls = (function () {
         },
         //Get Qualsims additional settings 
         getAdditionalSettings: function () {
+            if (IsRevel()) {
+                return;
+            }
             if (TPIData.Mode.trim().toLowerCase() == LaunchMode.do || TPIData.Mode.trim().toLowerCase() == LaunchMode.review) {
                 var obj = {};
                 obj.knowdlresourceid = TPIData.ResourceId;
@@ -913,7 +988,6 @@ var ServiceCalls = (function () {
     };
 })();
 
-
 //Call below function on k_Cust_OnOrientationChange() and k_Cust_LoadPageContentComplete()
 //QLOptionRandomizer.Init();
 //end Call
@@ -927,7 +1001,7 @@ if (typeof (isModuleLoaded) === 'undefined') {
 
         var QLOptions = [];
 
-        var QLSkipRandomization = [182]
+        var QLSkipRandomization = [260, 223]
 
         //Private function definitions goes here
         function _privateFunction(param1, param2) {}
@@ -948,6 +1022,7 @@ if (typeof (isModuleLoaded) === 'undefined') {
                 RandomState = _randomState;
             },
             Init: function () {
+                debugger;
                 if (this.IsSkipRandomization(gCurrPageObj.PageId)) {
                     return;
                 }
@@ -1012,6 +1087,7 @@ if (typeof (isModuleLoaded) === 'undefined') {
                 }
             },
             Randomize: function (_rState, _extraParams, tabIndexes, mode) {
+                debugger;
                 if (_rState != undefined) {
                     if (_extraParams.isHAlignment) {
                         var pos = _extraParams.StartLeft;
@@ -1078,7 +1154,7 @@ if (typeof (isModuleLoaded) === 'undefined') {
     })();
 
     var CustomizeComponents = (function () {
-        var SkipPageArray = [182]
+        var SkipPageArray = []
         return {
             ApplyWrapperToButtonImg: function (_optionId) {
                 if (this.IsSkipPage(gCurrPageObj.PageId)) {
@@ -1114,7 +1190,7 @@ if (typeof (isModuleLoaded) === 'undefined') {
     })();
 }
 
-//Usage: 
+//Add this call 
 //CustomizeComponents.ApplyWrapperToButtonImg()
 //QLOptionRandomizer.Init();
 
@@ -1155,6 +1231,109 @@ function UpdateDOMElementSequence() {
         } else {
             $(".column").find(".k-element-box[simscore]").removeAttr("tabindex");
             //setTimeout(function () { $(".column").find(".k-element-box[simscore]").removeAttr("tabindex").attr("aria-hidden", true); }, 100);
+        }
+    }
+}
+
+function InitFromRevelStateData(r_statedata) {
+    TPIData.Mode = k_Revel.get_LaunchData().mode;
+    TPIData.AllowedAttempts = k_Revel.get_Settings().AllowedAttempts;
+    TPIData.TargetPoints = k_Revel.get_Settings().TargetPoints;
+
+    TPIAttempts = r_statedata;
+
+    if (TPIAttempts == undefined)
+        TPIAttempts = {};
+    if (TPIAttempts.Attempts == undefined)
+        TPIAttempts.Attempts = [];
+
+    //att=1&mode=review
+    atmptIndx = TPIAttempts.Attempts.length - 1;
+    if (TPIData.Mode != LaunchMode.review) {
+        if (atmptIndx == -1) {
+            TPIAttempts.Attempts.push($.extend(true, {}, attempt));
+        }
+        atmptIndx = TPIAttempts.Attempts.length - 1;
+    }
+
+    if (TPIAttempts.Attempts[atmptIndx].duration)
+        g_TPIDuration = Number(TPIAttempts.Attempts[atmptIndx].duration);
+
+    if (TPIAttempts.Attempts[atmptIndx].reqdData.bookmarkData != undefined) {
+        QLSimModule.SetBookmark(TPIAttempts.Attempts[atmptIndx].reqdData.bookmarkData);
+    }
+
+    if (typeof TPIAttempts.Attempts[atmptIndx].requestNo !== "undefined") {
+        g_requestNo = TPIAttempts.Attempts[atmptIndx].requestNo;
+    }
+
+    if (TPIAttempts.Attempts[atmptIndx].status != "complete") {
+        g_TPIDuration = 0
+    }
+    //NM:21-July-2017 - bookmark page logic is changed from page index to page Id.
+    //We are not removing lastVisitedPgIndex prop but will not use it.
+    //will use newly added lastVisitedPgId prop.
+    if (TPIData.Mode === LaunchMode.do) {
+        if (TPIAttempts.Attempts !== undefined &&
+            atmptIndx >= 0 && (TPIAttempts.Attempts[atmptIndx].lastVisitedPgIndex - 1) > 0) {
+            if (TPIAttempts.Attempts[atmptIndx].lastVisitedPgId != undefined && TPIAttempts.Attempts[atmptIndx].lastVisitedPgId != "") {
+                navlastpage = TPIAttempts.Attempts[atmptIndx].lastVisitedPgId
+                setTimeout(function () {
+                    GotoPageId(navlastpage);
+                }, 100);
+            } else {
+                var nav_splitdata = TPIAttempts.Attempts[0].reqdData.bookmarkData.visitedNodesArray.split(",");
+                navlastpage = undefined;
+                for (var spltidx = nav_splitdata.length - 1; spltidx >= 0; spltidx--) {
+                    if ($.trim(nav_splitdata[spltidx]) != "") {
+                        navlastpage = GetPage($.trim(nav_splitdata[spltidx]))
+                        if (navlastpage != undefined) {
+                            navlastpage = $.trim(nav_splitdata[spltidx]);
+                            TPIAttempts.Attempts[atmptIndx].lastVisitedPgId = navlastpage;
+                            break;
+                        }
+                    }
+                }
+                if (navlastpage != undefined) {
+                    setTimeout(function () {
+                        GotoPageId(navlastpage);
+                    }, 100);
+                }
+            }
+        }
+    }
+
+    skipped_GetSessionData = true;
+    if (g_reachedSummary == true) {
+        g_reachedSummary = true;
+    }
+
+}
+
+function SetRevelStateData() {
+    if (IsRevel()) {
+        if ((gPages[0].PageId + "") != (gCurrPageObj.PageId + "")) {
+            if (k_Revel.get_LaunchData().mode == LaunchModes.do) {
+                //TPIAttempts.Attempts[atmptIndx].no = atmptIndx + 1; //no use
+                if (TPIAttempts.Attempts[atmptIndx].status != "complete") {
+                    TPIAttempts.Attempts[atmptIndx].status = "inprogress";
+                }
+                TPIAttempts.Attempts[atmptIndx].duration = parseInt((new Date().getTime() - _startTime.getTime()) / 1000) + g_TPIDuration;
+                var overallScore = QLSimModule.GetTotalScore();
+                TPIAttempts.Attempts[atmptIndx].overallScore = overallScore;
+                //DDeva: 29Mar17 - redirect to last page
+                if (gCurrPageObj.PageId != gPages[0]) {
+                    TPIAttempts.Attempts[atmptIndx].lastVisitedPgIndex = gCurrPageObj.ArrayIndex + 1;
+                    //NM:21-July-2017 - bookmark page logic is changed from page index to page Id.                    
+                    TPIAttempts.Attempts[atmptIndx].lastVisitedPgId = gCurrPageObj.PageId;
+                }
+
+                TPIAttempts.Attempts[atmptIndx].reqdData.bookmarkData = QLSimModule.GetBookmark();
+                TPIAttempts.Attempts[atmptIndx].requestNo = g_requestNo++;
+
+
+                k_Revel.set_StateData(TPIAttempts)
+            }
         }
     }
 }

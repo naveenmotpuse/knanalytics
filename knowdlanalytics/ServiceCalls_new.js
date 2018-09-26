@@ -146,7 +146,7 @@ if (typeof (isModuleLoaded) === 'undefined') {
 
         //var _knowdlPostUrl = "http://dev.knowdl.com/qlinteraction/process";
         //var _knowdlPostUrl = "https://stage1.knowdl.com/qlinteraction/process"
-        var _knowdlPostUrl = "http://pe-xl-dev.knowdl.com/knowdlanalytics/QLInteractionProcess/"
+        var _knowdlPostUrl =  window.location.origin + "/knowdlanalytics/QLInteractionProcess/"
 
         var _questionstarttime = new Date();
 

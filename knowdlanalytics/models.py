@@ -21,20 +21,7 @@ class ql_assignmentdetails(m.Model):
     ObjectiveDetails =m.TextField()    
     
     class Meta:
-        db_table = 'ql_assignmentdetails'
-        
-class ql_assignmentadditionaldetails(m.Model):
-    Id = m.AutoField(primary_key = True)    
-    Assignment_Id = m.TextField()
-    TotalScore = m.DecimalField(default=0, max_digits=10, decimal_places=2) 
-    NumOfUsers = m.IntegerField(default=0)
-    AdditionalField1 = m.TextField(default="")
-    AdditionalField2 = m.TextField(default="")
-    AdditionalField3 = m.TextField(default="")
-    
-    class Meta:
-        db_table = 'ql_assignmentadditionaldetails'
-    
+        db_table = 'QLAssignmentDetails'
 
 class ql_masterquestions(m.Model) :
     Id = m.AutoField(primary_key=True)
@@ -49,7 +36,7 @@ class ql_masterquestions(m.Model) :
     Type = m.CharField(max_length=50)
     
     class Meta:
-        db_table = 'ql_masterquestions'
+        db_table = 'QLMasterQuestions'
 
 class ql_masterattempts(m.Model):    
     Id = m.AutoField(primary_key=True) 
@@ -70,7 +57,7 @@ class ql_masterattempts(m.Model):
     ReportStatus = m.TextField()
     
     class Meta:
-        db_table = 'ql_masterattempts'
+        db_table = 'QLMasterAttempts'
         
 class ql_questionattemptdetails(m.Model):    
     Id = m.AutoField(primary_key=True) 
@@ -85,7 +72,7 @@ class ql_questionattemptdetails(m.Model):
     AdditionalInfo = m.TextField()
     
     class Meta:
-        db_table = 'ql_questionattemptdetails'
+        db_table = 'QLQuestionAttemptDetails'
 
 #Anu 25-oct-2017 for QLInteractionController
 class tbl_LogEntries(m.Model) :

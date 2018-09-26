@@ -18,7 +18,7 @@
                 <div style="font-size:12px;color:green;float:left;padding-left:10px;padding-top:3px;">
                     {% for att in item.Attempts %}
                     <a style="padding-right:10px;" href="javascript:void(0);" class="student_review_link" attno="{{att.AttemptNo}}"
-                        sid="{{att.SessionId}}">Attempt {{att.AttemptNo}} ({{att.Score}})%</a>
+                        sid="{{att.SessionId}}" pkgpath={{QLReportView.RelPackagePath}}>Attempt {{att.AttemptNo}} ({{att.Score}})%</a>
                     {% endfor %}
                 </div>
                 <input type="hidden" id="hdnScore{{item.Id}}" value="{{item.Score}}" />
@@ -63,7 +63,7 @@
                                 {% for option in questionDetail.Options %}
                                 {% AddPointImageOrNot question option as ret %}
                                 <td class="tdOverviewOptionImage" align="center">
-                                    <img src="{{QLReportView.RelPackagePath}}/{{ret.imgsrc}}" height="60" width="60" />
+                                    <img src="/{{QLReportView.RelPackagePath}}/{{ret.imgsrc}}" height="60" width="60" />
                                     <div>
                                         {% if addPointImage == True %}
                                         <img src="/content/staticfiles/knowdlanalytics//{{ret.pointsImage}}" style="position:absolute;width:20px;" />
@@ -78,7 +78,7 @@
                             <tr>
                             {% AddPointImageOrNot question option as ret %}
                                 <td class="tdOverviewOptionImage">
-                                    <img src="{{QLReportView.RelPackagePath}}/{{ret.imgsrc}}" height="60" width="60" />
+                                    <img src="/{{QLReportView.RelPackagePath}}/{{ret.imgsrc}}" height="60" width="60" />
                                 </td>
                                 <td class="tdOverviewoptiontexxt">
                                     <div>
